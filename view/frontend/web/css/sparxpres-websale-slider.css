@@ -1,0 +1,301 @@
+/*! nouislider - 15.5.0 */
+.spxUi-target,
+.spxUi-target * {
+	-webkit-touch-callout: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	-webkit-user-select: none;
+	-ms-touch-action: none;
+	touch-action: none;
+	-ms-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.spxUi-target {
+	position: relative;
+}
+.spxUi-base,
+.spxUi-connects {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	z-index: 1;
+}
+/* Wrapper for all connect elements.
+ */
+.spxUi-connects {
+	overflow: hidden;
+	z-index: 0;
+}
+.spxUi-connect,
+.spxUi-origin {
+	will-change: transform;
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	right: 0;
+	height: 100%;
+	width: 100%;
+	-ms-transform-origin: 0 0;
+	-webkit-transform-origin: 0 0;
+	-webkit-transform-style: preserve-3d;
+	transform-origin: 0 0;
+	transform-style: flat;
+}
+/* Offset direction
+ */
+.spxUi-txt-dir-rtl.spxUi-horizontal .spxUi-origin {
+	left: 0;
+	right: auto;
+}
+/* Give origins 0 height/width so they don't interfere with clicking the
+ * connect elements.
+ */
+.spxUi-vertical .spxUi-origin {
+	top: -100%;
+	width: 0;
+}
+.spxUi-horizontal .spxUi-origin {
+	height: 0;
+}
+.spxUi-handle {
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	position: absolute;
+}
+.spxUi-touch-area {
+	height: 100%;
+	width: 100%;
+}
+.spxUi-state-tap .spxUi-connect,
+.spxUi-state-tap .spxUi-origin {
+	-webkit-transition: transform 0.3s;
+	transition: transform 0.3s;
+}
+.spxUi-state-drag * {
+	cursor: inherit !important;
+}
+/* Slider size and handle placement;
+ */
+.spxUi-horizontal {
+	height: 18px;
+}
+.spxUi-horizontal .spxUi-handle {
+	width: 34px;
+	height: 28px;
+	right: -17px;
+	top: -6px;
+}
+.spxUi-vertical {
+	width: 18px;
+}
+.spxUi-vertical .spxUi-handle {
+	width: 28px;
+	height: 34px;
+	right: -6px;
+	bottom: -17px;
+}
+.spxUi-txt-dir-rtl.spxUi-horizontal .spxUi-handle {
+	left: -17px;
+	right: auto;
+}
+/* Styling;
+ * Giving the connect element a border radius causes issues with using transform: scale
+ */
+.spxUi-target {
+	background: #FAFAFA;
+	border-radius: 4px;
+	border: 1px solid #D3D3D3;
+	box-shadow: inset 0 1px 1px #F0F0F0, 0 3px 6px -5px #BBB;
+}
+.spxUi-connects {
+	border-radius: 3px;
+}
+.spxUi-connect {
+	background: #3FB8AF;
+}
+/* Handles and cursors;
+ */
+.spxUi-draggable {
+	cursor: ew-resize;
+}
+.spxUi-vertical .spxUi-draggable {
+	cursor: ns-resize;
+}
+.spxUi-handle {
+	border: 1px solid #D9D9D9;
+	border-radius: 3px;
+	background: #FFF;
+	cursor: default;
+	box-shadow: inset 0 0 1px #FFF, inset 0 1px 7px #EBEBEB, 0 3px 6px -3px #BBB;
+}
+.spxUi-active {
+	box-shadow: inset 0 0 1px #FFF, inset 0 1px 7px #DDD, 0 3px 6px -3px #BBB;
+}
+/* Handle stripes;
+ */
+.spxUi-handle:before,
+.spxUi-handle:after {
+	content: "";
+	display: block;
+	position: absolute;
+	height: 14px;
+	width: 1px;
+	background: #E8E7E6;
+	left: 14px;
+	top: 6px;
+}
+.spxUi-handle:after {
+	left: 17px;
+}
+.spxUi-vertical .spxUi-handle:before,
+.spxUi-vertical .spxUi-handle:after {
+	width: 14px;
+	height: 1px;
+	left: 6px;
+	top: 14px;
+}
+.spxUi-vertical .spxUi-handle:after {
+	top: 17px;
+}
+/* Disabled state;
+ */
+[disabled] .spxUi-connect {
+	background: #B8B8B8;
+}
+[disabled].spxUi-target,
+[disabled].spxUi-handle,
+[disabled] .spxUi-handle {
+	cursor: not-allowed;
+}
+/* Base;
+ *
+ */
+.spxUi-pips,
+.spxUi-pips * {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.spxUi-pips {
+	position: absolute;
+	color: #999;
+}
+/* Values;
+ *
+ */
+.spxUi-value {
+	position: absolute;
+	white-space: nowrap;
+	text-align: center;
+}
+.spxUi-value-sub {
+	color: #ccc;
+	font-size: 10px;
+}
+/* Markings;
+ *
+ */
+.spxUi-marker {
+	position: absolute;
+	background: #CCC;
+}
+.spxUi-marker-sub {
+	background: #AAA;
+}
+.spxUi-marker-large {
+	background: #AAA;
+}
+/* Horizontal layout;
+ *
+ */
+.spxUi-pips-horizontal {
+	padding: 10px 0;
+	height: 80px;
+	top: 100%;
+	left: 0;
+	width: 100%;
+}
+.spxUi-value-horizontal {
+	-webkit-transform: translate(-50%, 50%);
+	transform: translate(-50%, 50%);
+}
+.spxUi-rtl .spxUi-value-horizontal {
+	-webkit-transform: translate(50%, 50%);
+	transform: translate(50%, 50%);
+}
+.spxUi-marker-horizontal.spxUi-marker {
+	margin-left: -1px;
+	width: 2px;
+	height: 5px;
+}
+.spxUi-marker-horizontal.spxUi-marker-sub {
+	height: 10px;
+}
+.spxUi-marker-horizontal.spxUi-marker-large {
+	height: 15px;
+}
+/* Vertical layout;
+ *
+ */
+.spxUi-pips-vertical {
+	padding: 0 10px;
+	height: 100%;
+	top: 0;
+	left: 100%;
+}
+.spxUi-value-vertical {
+	-webkit-transform: translate(0, -50%);
+	transform: translate(0, -50%);
+	padding-left: 25px;
+}
+.spxUi-rtl .spxUi-value-vertical {
+	-webkit-transform: translate(0, 50%);
+	transform: translate(0, 50%);
+}
+.spxUi-marker-vertical.spxUi-marker {
+	width: 5px;
+	height: 2px;
+	margin-top: -1px;
+}
+.spxUi-marker-vertical.spxUi-marker-sub {
+	width: 10px;
+}
+.spxUi-marker-vertical.spxUi-marker-large {
+	width: 15px;
+}
+.spxUi-tooltip {
+	display: block;
+	position: absolute;
+	border: 1px solid #D9D9D9;
+	border-radius: 3px;
+	background: #fff;
+	color: #000;
+	padding: 5px;
+	text-align: center;
+	white-space: nowrap;
+}
+.spxUi-horizontal .spxUi-tooltip {
+	-webkit-transform: translate(-50%, 0);
+	transform: translate(-50%, 0);
+	left: 50%;
+	bottom: 120%;
+}
+.spxUi-vertical .spxUi-tooltip {
+	-webkit-transform: translate(0, -50%);
+	transform: translate(0, -50%);
+	top: 50%;
+	right: 120%;
+}
+.spxUi-horizontal .spxUi-origin > .spxUi-tooltip {
+	-webkit-transform: translate(50%, 0);
+	transform: translate(50%, 0);
+	left: auto;
+	bottom: 10px;
+}
+.spxUi-vertical .spxUi-origin > .spxUi-tooltip {
+	-webkit-transform: translate(0, -18px);
+	transform: translate(0, -18px);
+	top: auto;
+	right: 28px;
+}

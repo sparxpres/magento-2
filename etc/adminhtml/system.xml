@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+	<system>
+		<tab id="sparxpres" translate="label" sortOrder="1000">
+			<label>Sparxpres</label>
+		</tab>
+		<section id="sparxpres" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+			<label>Konfiguration</label>
+			<tab>sparxpres</tab>
+			<resource>Sparxpres_Websale::config</resource>
+			<group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>Sparxpres konfiguration</label>
+				<field id="link_id" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Sparxpres link id</label>
+					<comment>Indsæt det link id du har fået af Sparxpres.</comment>
+				</field>
+				<field id="info_page_id" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Finansieringsinformation siden</label>
+					<comment>Vælg den side, hvor lånebetingelserne skal vises.</comment>
+					<source_model>Sparxpres\Websale\Model\Config\CmsPages</source_model>
+				</field>
+				<field id="display_view_type" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Sparxpres view type</label>
+					<comment>Vælg om løbetiderne skal vises som en slider eller som en dropdown boks.</comment>
+					<source_model>Sparxpres\Websale\Model\Config\ViewTypes</source_model>
+				</field>
+				<field id="display_wrapper_type_product" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Produkt side visningstype</label>
+					<comment>Vælg om finansiering skal vises indlejret på siden, eller som en knap der åbner et modal vindue.</comment>
+					<source_model>Sparxpres\Websale\Model\Config\WrapperTypes</source_model>
+				</field>
+				<field id="display_wrapper_type_cart" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Kurv side visningstype</label>
+					<comment>Vælg om finansiering skal vises indlejret på siden, eller som en knap der åbner et modal vindue.</comment>
+					<source_model>Sparxpres\Websale\Model\Config\WrapperTypes</source_model>
+				</field>
+				<field id="main_color" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Ændre Sparxpres farve?</label>
+					<comment>Hvis du vil ændre den røde farve som Sparxpres bruger, kan du indtaste en hex kode her (husk at starte med #, fx. "#222222").</comment>
+				</field>
+			</group>
+		</section>
+	</system>
+</config>

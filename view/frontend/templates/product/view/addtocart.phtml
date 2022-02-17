@@ -1,0 +1,23 @@
+<?php
+if ($block->isValid()) {
+	$content = $block->getDisplayContent();
+	$linkId = $block->getLinkId();
+	$price = $block->getPrice();
+    $defaultPeriod = $block->getDefaultPeriod();
+    $dynamicPeriod = $block->isDynamicPeriod() ? '1' : '0';
+
+	echo '<div id="sparxpres_web_sale" class="sparxpres_product" data-link-id="'.$linkId.'" data-price="'.$price.'" data-default-period="'.$defaultPeriod.'" data-dynamic-period="'.$dynamicPeriod.'">' . $content . '</div>';
+
+    echo '
+<script type="text/x-magento-init">
+{
+  "#sparxpres_web_sale": {
+      "Sparxpres_Websale/js/sparxpres-websale": {}
+  },
+  "#sparxpres_web_sale_init": {
+      "Sparxpres_Websale/js/sparxpres-websale-slider": {}
+  }
+}
+</script>
+    ';
+}

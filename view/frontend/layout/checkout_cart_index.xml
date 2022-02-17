@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
+		<referenceBlock name="head.additional">
+			<block template="Sparxpres_Websale::head.phtml"
+				   class="Sparxpres\Websale\Block\Head"
+				   name="websale_block_head" />
+		</referenceBlock>
+
+		<referenceBlock name="checkout.cart.methods">
+			<block template="Sparxpres_Websale::cart/view/cart.phtml"
+				   class="Sparxpres\Websale\Block\Cart"
+				   name="sparxpres-cart" />
+		</referenceBlock>
+	</body>
+</page>

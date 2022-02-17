@@ -1,0 +1,25 @@
+{
+  "name": "sparxpres/websale",
+  "description": "Sparxpres Websale for Magento 2",
+  "type": "magento2-module",
+  "version": "1.0.10",
+  "license": [
+	"OSL-3.0"
+  ],
+  "authors": [
+	{
+	  "name": "Sparxpres",
+	  "email": "hpo@sparxpres.dk",
+	  "homepage": "https://sparxpres.dk",
+	  "role": "Developer"
+	}
+  ],
+  "autoload": {
+	"files": [
+	  "registration.php"
+	],
+	"psr-4": {
+	  "Sparxpres\\Websale\\": ""
+	}
+  }
+}
