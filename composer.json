@@ -21,11 +21,5 @@
 	"psr-4": {
 	  "Sparxpres\\Websale\\": ""
 	}
-  },
-  "repositories": {
-	"sparxpres": {
-	  "type": "composer",
-	  "url": "git@github.com:sparxpres/magento-2.git"
-	}
   }
 }
