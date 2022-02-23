@@ -5,7 +5,7 @@
 Install via Composer:
 
 ```
-composer require sparxpres/websale
+composer require sparxpres/module-websale
 php bin/magento module:enable Sparxpres_Websale
 php bin/magento setup:upgrade
 php bin/magento setup:di:compile
@@ -17,7 +17,7 @@ php bin/magento setup:static-content:deploy
 To update the extension to the latest available version (depending on your `composer.json`), run these commands in your terminal:
 
 ```
-composer update sparxpres/websale --with-dependencies
+composer update sparxpres/module-websale --with-dependencies
 php bin/magento setup:upgrade
 php bin/magento setup:di:compile
 php bin/magento setup:static-content:deploy
