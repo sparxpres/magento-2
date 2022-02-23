@@ -1,6 +1,8 @@
 <?php
 namespace Sparxpres\Websale\Model\Api;
 
+use Magento\Sales\Model\Order;
+
 class Callback implements \Sparxpres\Websale\Api\CallbackInterface
 {
     protected $request;
@@ -50,10 +52,10 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
             }
 
             $originalStatus = $order->getStatus();
-            if ($originalStatus === 'canceled'
-                || $originalStatus === 'fraud'
-                || $originalStatus === 'closed'
-                || $originalStatus === 'complete'
+            if ($originalStatus === Order::STATE_CANCELED
+                || $originalStatus === Order::STATUS_FRAUD
+                || $originalStatus === Order::STATE_CLOSED
+                || $originalStatus === Order::STATE_COMPLETE
             ) {
                 $order->addCommentToStatusHistory("Sparxpres sendte callback (".$status."), men ordrens status var ".$originalStatus.", og er derfor IKKE opdateret.");
                 $order->save();
@@ -65,29 +67,29 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
             } else {
                 switch ($status) {
                     case "NEW":
-                        $order->addCommentToStatusHistory("Sparxpres har modtaget låneansøgningen.", "pending_payment", false);
+                        $order->addCommentToStatusHistory("Sparxpres har modtaget låneansøgningen.", Order::STATE_PENDING_PAYMENT, false);
                         $order->save();
                         break;
                     case "WAITING_FOR_SIGNATURE":
-                        $order->addCommentToStatusHistory("Sparxpres afventer kundens underskrift.", "pending_payment", false);
+                        $order->addCommentToStatusHistory("Sparxpres afventer kundens underskrift.", Order::STATE_PENDING_PAYMENT, false);
                         $order->save();
                         break;
                     case "REGRETTED":
                     case "CANCELED":
                     case "CANCELLED":
-                        $order->addCommentToStatusHistory("Sparxpres har annulleret lånet.", "canceled", false);
+                        $order->addCommentToStatusHistory("Sparxpres har annulleret lånet.", Order::STATE_CANCELED, false);
                         $order->save();
                         break;
                     case "RESERVED":
-                        $order->addCommentToStatusHistory("Lånet er klar til frigivelse hos Sparxpres.", "payment_review", false);
+                        $order->addCommentToStatusHistory("Lånet er klar til frigivelse hos Sparxpres.", Order::STATE_PAYMENT_REVIEW, false);
                         $order->save();
                         break;
                     case "CAPTURED":
-                        $order->addCommentToStatusHistory("Lånet er sat til udbetaling hos Sparxpres.", "processing", false);
+                        $order->addCommentToStatusHistory("Lånet er sat til udbetaling hos Sparxpres.", Order::STATE_PROCESSING, false);
                         $order->save();
                         break;
                     case "DECLINE":
-                        $order->addCommentToStatusHistory("Sparxpres har givet afslag på låneansøgningen.", "canceled", false);
+                        $order->addCommentToStatusHistory("Sparxpres har givet afslag på låneansøgningen.", Order::STATE_CANCELED, false);
                         $order->save();
                         break;
                     default:
