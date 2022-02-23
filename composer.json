@@ -1,7 +1,7 @@
 {
-  "name": "sparxpres/websale",
-  "description": "Sparxpres Websale for Magento 2",
+  "name": "sparxpres/module-websale",
   "type": "magento2-module",
+  "description": "Sparxpres Websale for Magento 2",
   "version": "1.0.10",
   "license": [
 	"OSL-3.0"
@@ -20,6 +20,12 @@
 	],
 	"psr-4": {
 	  "Sparxpres\\Websale\\": ""
+	}
+  },
+  "repositories": {
+	"sparxpres": {
+	  "type": "composer",
+	  "url": "git@github.com:sparxpres/magento-2.git"
 	}
   }
 }

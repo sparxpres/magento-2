@@ -119,7 +119,8 @@
     position: absolute;
 }
 
-#sparxpresInformationPageModal .Sparxpres__modal-content .sparxpres-back-btn {
+#sparxpresInformationPageModal .Sparxpres__modal-content .sparxpres-back-btn,
+#sparxpresInformationPageModal .Sparxpres__modal-content .sparxpres-appl-btn {
     display: none;
 }
 
