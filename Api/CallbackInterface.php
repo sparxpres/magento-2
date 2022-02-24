@@ -4,8 +4,9 @@ namespace Sparxpres\Websale\Api;
 interface CallbackInterface
 {
     /**
-     * Post api
-     * @return \Magento\Framework\Controller\ResultInterface;
+     * Put/Post api
+     *
+     * @return \Sparxpres\Websale\Api\Data\CallbackResponseInterface
      */
     public function updateOrderStatus();
 }

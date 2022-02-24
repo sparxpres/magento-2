@@ -8,29 +8,35 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
     protected $request;
     protected $response;
     protected $orderRepository;
+    protected $responseFactory;
 
     /**
      * CustomerAddress constructor.
      * @param \Magento\Framework\App\RequestInterface $request
      * @param \Magento\Framework\App\ResponseInterface $response
+     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
+     * @param \Sparxpres\Websale\Api\Data\CallbackResponseInterfaceFactory $responseFactory
      */
     public function __construct(\Magento\Framework\App\RequestInterface $request,
                                 \Magento\Framework\App\ResponseInterface $response,
-                                \Magento\Sales\Api\OrderRepositoryInterface $orderRepository)
+                                \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
+                                \Sparxpres\Websale\Api\Data\CallbackResponseInterfaceFactory $responseFactory)
     {
         $this->request = $request;
         $this->response = $response;
         $this->orderRepository = $orderRepository;
+        $this->responseFactory = $responseFactory;
     }
 
     /**
      * doPost method
-     * @return \Magento\Framework\App\ResponseInterface
+     * @return \Sparxpres\Websale\Api\Data\CallbackResponseInterface
      */
     public function updateOrderStatus() {
-        $resp = $this->response;
-
         try {
+            // @var \Sparxpres\Websale\Api\Data\CallbackResponseInterface
+            $resp = $this->responseFactory->create();
+
             $rawContent = $this->request->getContent();
             $params = json_decode($rawContent);
 
@@ -60,10 +66,8 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
                 $order->addCommentToStatusHistory("Sparxpres sendte callback (".$status."), men ordrens status var ".$originalStatus.", og er derfor IKKE opdateret.");
                 $order->save();
 
-                $resp->setContent(json_encode([
-                    'success' => true,
-                    'message' => "Status NOT updated, because original status is: ".$originalStatus
-                ]));
+                $resp->setSuccess(true);
+                $resp->setMessage("Status NOT updated, because original status is: ".$originalStatus);
             } else {
                 switch ($status) {
                     case "NEW":
@@ -95,19 +99,12 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
                     default:
                         throw new \InvalidArgumentException("Status not valid");
                 }
-
-                $resp->setContent(json_encode([
-                    'success' => true,
-                ]));
+                $resp->setSuccess(true);
             }
+            return $resp;
         } catch(\Exception $e) {
-            $resp->setContent(json_encode([
-                'success' => false,
-                'message' => $e->getMessage()
-            ]));
+            throw new \Magento\Framework\Exception\ValidatorException(__($e->getMessage()));
         }
-
-        return $resp->sendResponse();
     }
 
 }
