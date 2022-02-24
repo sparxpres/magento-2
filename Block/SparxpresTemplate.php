@@ -225,7 +225,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
 
 			$webSaleVersion = '';
 			if (isset($version)) {
-				$webSaleVersion = '&websaleversion=magento_v' . $version;
+				$webSaleVersion = '&websaleversion=magento2_v' . $version;
 			}
 
 			$url = self::$SPARXPRES_BASE_URI . "loaninfo?linkId=" . $linkId . "&amount=" . $price . $webSaleVersion;
