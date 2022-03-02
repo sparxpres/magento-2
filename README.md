@@ -13,7 +13,6 @@ composer require sparxpres/module-websale
 php bin/magento module:enable Sparxpres_Websale
 php bin/magento setup:upgrade
 php bin/magento setup:di:compile
-php bin/magento setup:static-content:deploy
 ```
 
 ## Update with composer
