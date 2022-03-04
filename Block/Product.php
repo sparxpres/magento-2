@@ -45,7 +45,7 @@ class Product extends SparxpresTemplate {
 			if (!$product->getId()) {
 				throw new LocalizedException(__('Failed to initialize product'));
 			}
-			$this->_price = ceil($product->getPrice());
+            $this->_price = ceil($product->getFinalPrice());
 		}
 		return $this->_price;
 	}
