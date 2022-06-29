@@ -33,7 +33,13 @@ class Index extends \Magento\Framework\App\Action\Action {
         $cancelUrl = $this->_url->getUrl('checkout/cart/');
 
 		$redirect = $this->resultRedirectFactory->create();
-		$redirect->setUrl('https://sparxpres.dk/ansoegning/init/?linkId='.$linkId.'&transactionId='.$orderId.'&amountCents='.$amountCents.'&returnurl='.urlencode($returnUrl).'&cancelurl='.urlencode($cancelUrl));
+		$redirect->setUrl(
+            'https://sparxpres.dk/ansoegning/init/?linkId='.$linkId.
+            '&transactionId='.$orderId.
+            '&amountCents='.$amountCents.
+            '&returnurl='.urlencode($returnUrl).
+            '&cancelurl='.urlencode($cancelUrl)
+        );
 		return $redirect;
 	}
 }
