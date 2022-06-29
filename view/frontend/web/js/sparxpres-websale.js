@@ -1,52 +1,50 @@
-define(['jquery'], function($){
+define(['jquery','jquery/validate'], function($){
 	"use strict";
 
 	$(document).ready(function() {
-		let spxLoanCalcEngine = {
+		$.validator.defaults.ignore = ":hidden,input.sparxpres-slider,.no-validation";
+
+		const spxLoanCalcEngine = {
 			debug: false,
+			loanId: 0,
 			prevCalculationPeriod: 0,
 			prevCalculationPrice: 0,
-			loanInfoCacheMap: new Map(),
-			$sparxpresWebSale: null,
-			$sliderPeriodElem: 0,
-			$dropdownPeriodElem: 0,
+			$webSaleElem: null,
+			$periodElem: null,
+			$rangeStepsElem: null,
 
 			init: function () {
-				/**
-				 * Add event listener for select period change
-				 */
-				window.addEventListener("sparxpresSelectRuntimeChange", function (event) {
-					if (spxLoanCalcEngine.debug) console.log("sparxpresSelectRuntimeChange event caught");
-					spxLoanCalcEngine.loanCalculation(event.detail && event.detail.period ? parseInt(event.detail.period) : null);
+				window.addEventListener("sparxpresPeriodChange", function (event) {
+					if (spxLoanCalcEngine.debug) console.log("sparxpresPeriodChange event caught");
+					spxLoanCalcEngine.loanCalculation(parseInt(event.detail.period));
 				});
 
-				/**
-				 * Add event listener for slider period change
-				 */
-				window.addEventListener("sparxpresSliderRuntimeChange", function (event) {
-					if (spxLoanCalcEngine.debug) console.log("sparxpresSliderRuntimeChange event caught");
-					spxLoanCalcEngine.loanCalculation(event.detail && event.detail.period ? parseInt(event.detail.period) : null);
+				window.addEventListener("sparxpresPeriodInput", function (event) {
+					if (spxLoanCalcEngine.debug) console.log("sparxpresPeriodInput event caught");
+					spxLoanCalcEngine._updateSliderBackground(
+						parseInt(event.detail.period),
+						parseInt(event.detail.min),
+						parseInt(event.detail.max)
+					);
 				});
 
-				/**
-				 * Add event listener for variation products
-				 */
 				window.addEventListener("sparxpresRuntimeRecalculate", function (event) {
 					if (spxLoanCalcEngine.debug) console.log("sparxpresRuntimeRecalculate event caught");
-					let _price = event.detail && event.detail.price ? parseInt(event.detail.price) : null;
-					let _period = event.detail && event.detail.period ? parseInt(event.detail.period) : null;
+					const _price = event.detail && event.detail.price ? parseInt(event.detail.price) : null;
+					const _period = event.detail && event.detail.period ? parseInt(event.detail.period) : null;
 					spxLoanCalcEngine.loanCalculation(_period, _price);
 				});
 
 				/**
 				 * Add event listener for modal information page
 				 */
-				window.addEventListener("sparxpresInformationPageOpen", function (event) {
+				window.addEventListener("sparxpresInformationPageOpen", function (_event) {
 					if (spxLoanCalcEngine.debug) console.log("sparxpresInformationPageOpen event caught..");
 					let infoModal = $("#sparxpresInformationPageModal");
 					if (!infoModal.length) {
 						infoModal = $("<div></div>")
 							.attr("id", "sparxpresInformationPageModal")
+							.attr("class", "sparxpres-modal")
 							.attr("role", "dialog")
 							.attr("tabindex", "-1")
 							.attr("aria-modal", "true");
@@ -56,9 +54,9 @@ define(['jquery'], function($){
 					if (infoModal.length) {
 						if (infoModal.is(":empty")) {
 							if (spxLoanCalcEngine.debug) console.log("sparxpresInformationPage not loaded, load and show it..");
-							infoModal.html("<div class=\"Sparxpres__modal-content\">" +
-								"<span class=\"Sparxpres__modal-close\" onclick=\"document.getElementById('sparxpresInformationPageModal').style.display='none';\">&times;</span>" +
-								"<div class=\"Sparxpres__dynamic-content\"></div>" +
+							infoModal.html("<div class=\"sparxpres-modal-content\">" +
+								"<span class=\"sparxpres-modal-close\" onclick=\"document.getElementById('sparxpresInformationPageModal').style.display='none';\">&times;</span>" +
+								"<div class=\"sparxpres-dynamic-content\"></div>" +
 								"</div>");
 
 							infoModal.show();
@@ -69,56 +67,86 @@ define(['jquery'], function($){
 						}
 					}
 				});
+
+				/**
+				 * Add event listener for modal credit information page
+				 */
+				window.addEventListener("XpresPayInformationPageOpen", function(_event) {
+					if (spxLoanCalcEngine.debug) console.log("XpresPayInformationPageOpen event caught..");
+					let xpresPayModal = $("#XpresPayInformationPageModal");
+					if (!xpresPayModal.length) {
+						xpresPayModal = $("<div></div>")
+							.attr("id", "XpresPayInformationPageModal")
+							.attr("class", "sparxpres-modal")
+							.attr("role", "dialog")
+							.attr("tabindex", "-1")
+							.attr("aria-modal", "true");
+						$("body").append( xpresPayModal );
+					}
+
+					if (xpresPayModal.length) {
+						if (xpresPayModal.is(":empty")) {
+							if (spxLoanCalcEngine.debug) console.log("XpresPayInformationPageOpen not loaded, load and show it..");
+							xpresPayModal.html("<div class=\"sparxpres-modal-content\">" +
+								"<span class=\"sparxpres-modal-close\" onclick=\"document.getElementById('XpresPayInformationPageModal').style.display='none';\">&times;</span>" +
+								"<div class=\"sparxpres-dynamic-content\"></div>" +
+								"</div>");
+
+							xpresPayModal.show();
+							spxLoanCalcEngine._callRemoteXpresPayInformationPage( $("#sparxpres_web_sale").data("linkId") );
+						} else {
+							if (spxLoanCalcEngine.debug) console.log("XpresPayInformationPageOpen already loaded, show it..");
+							xpresPayModal.show();
+						}
+					}
+				});
 			},
 
 			loanCalculation: function (period = null, price = null) {
 				let webSaleElem = spxLoanCalcEngine._getSparxpresWebSaleElement();
-				if (!webSaleElem || !webSaleElem.data()) {
-					if (spxLoanCalcEngine.debug) console.log("loanCalculation returning because element was not found or has not data attributes.");
+				if (!webSaleElem || !webSaleElem.getAttribute("data-link-id")) {
+					if (spxLoanCalcEngine.debug) console.log("loanCalculation returning because element was not found or has no data attributes.");
 					return;
 				}
 
-				if (spxLoanCalcEngine.prevCalculationPeriod === 0) spxLoanCalcEngine.prevCalculationPeriod = parseInt(webSaleElem.data("defaultPeriod")) || 0;
-				if (spxLoanCalcEngine.prevCalculationPrice === 0) spxLoanCalcEngine.prevCalculationPrice = parseInt(webSaleElem.data("price")) || 0;
+				if (spxLoanCalcEngine.prevCalculationPeriod === 0) spxLoanCalcEngine.prevCalculationPeriod = parseInt(webSaleElem.getAttribute("data-period")) || 0;
+				if (spxLoanCalcEngine.prevCalculationPrice === 0) spxLoanCalcEngine.prevCalculationPrice = parseInt(webSaleElem.getAttribute("data-price")) || 0;
+				if (spxLoanCalcEngine.loanId === 0) spxLoanCalcEngine.loanId = parseInt(webSaleElem.getAttribute("data-loan-id")) || 0;
 
-				let linkId = webSaleElem.data("linkId");
-				let dynamicPeriod = parseInt(webSaleElem.data("dynamicPeriod")) || 0;
+				const linkId = webSaleElem.getAttribute("data-link-id");
 
 				period = period || spxLoanCalcEngine.prevCalculationPeriod;
 				price = price || spxLoanCalcEngine.prevCalculationPrice;
 				if (spxLoanCalcEngine.debug) console.log("loanCalculation period is %d price is %d", period, price);
 
-				if (!dynamicPeriod || spxLoanCalcEngine.prevCalculationPrice === 0 || spxLoanCalcEngine.prevCalculationPrice === price) {
-					spxLoanCalcEngine._callRemoteLoanCalculation(linkId, period, price);
-				} else {
-					let cacheKey = "loan-info-" + price;
-					let loanInfo = spxLoanCalcEngine.loanInfoCacheMap.get(cacheKey);
-					if (loanInfo) {
-						if (spxLoanCalcEngine.debug) console.log("Got loanInfo from cache with key %s", cacheKey);
-						spxLoanCalcEngine._updateDynamicRange(loanInfo.loanPeriods, period, price);
-						spxLoanCalcEngine._callRemoteLoanCalculation(linkId, period, price, loanInfo.loanPeriods);
-					} else {
-						if (spxLoanCalcEngine.debug) console.log("Trying to get loanInfo from remote with key %s", cacheKey);
-						spxLoanCalcEngine._callRemoteLoanInformation(linkId, period, price, cacheKey);
-					}
-				}
+				spxLoanCalcEngine._callRemoteLoanCalculation(linkId, period, price);
 			},
 
 			loadPageInformation: function (linkId) {
 				if (!linkId) return;
 
-				$.getJSON("https://sparxpres.dk/app/webintegration/information/", {
+				$.getJSON("https://sparxpres.dk/app/webintegration/info/", {
 					linkId: linkId
 				}).done(function (pageInfo) {
 					if (pageInfo && pageInfo.hasOwnProperty("html")) {
-						$("#sparxpresInformationPageModal .Sparxpres__dynamic-content").html(pageInfo.html);
+						$("#sparxpresInformationPageModal .sparxpres-dynamic-content").html(pageInfo.html);
 					}
 				});
 			},
 
 			_getSparxpresWebSaleElement: function () {
-				spxLoanCalcEngine.$sparxpresWebSale = spxLoanCalcEngine.$sparxpresWebSale || $("#sparxpres_web_sale");
-				return spxLoanCalcEngine.$sparxpresWebSale;
+				spxLoanCalcEngine.$webSaleElem = spxLoanCalcEngine.$webSaleElem || document.getElementById("sparxpres_web_sale");
+				return spxLoanCalcEngine.$webSaleElem;
+			},
+
+			_getSparxpresPeriodElement: function () {
+				spxLoanCalcEngine.$periodElem = spxLoanCalcEngine.$periodElem || document.querySelector("#sparxpres_web_sale_period .sparxpres-slider") || document.querySelector("#sparxpres_web_sale_period .sparxpres-select");
+				return spxLoanCalcEngine.$periodElem;
+			},
+
+			_getSparxpresRangeStepsElement: function () {
+				spxLoanCalcEngine.$rangeStepsElem = spxLoanCalcEngine.$rangeStepsElem || document.querySelector("#sparxpres_web_sale_period .sparxpres-slider-steps");
+				return spxLoanCalcEngine.$rangeStepsElem;
 			},
 
 			_callRemoteLoanCalculation: function (linkId, period, price) {
@@ -129,19 +157,20 @@ define(['jquery'], function($){
 				}).done(function (loanCalc) {
 					if (loanCalc && loanCalc.hasOwnProperty("success")) {
 						if (loanCalc.success === true) {
-							if (loanCalc.termsInMonths !== period) {
-								spxLoanCalcEngine._updatePeriod(loanCalc.termsInMonths);
-							}
 							spxLoanCalcEngine.prevCalculationPeriod = loanCalc.termsInMonths;
 							spxLoanCalcEngine.prevCalculationPrice = loanCalc.loanAmount;
 
-							$("#Sparxpres__dynamic-formattedMonthlyPayments").text(loanCalc.formattedMonthlyPayments);
-							$("#Sparxpres__dynamic-complianceText").text(loanCalc.complianceText);
-							$("#Sparxpres__dynamic-informationUrl").show();
+							if (loanCalc.loanId !== spxLoanCalcEngine.loanId) {
+								spxLoanCalcEngine._callRemoteLoanInformation(linkId, loanCalc.termsInMonths, loanCalc.loanAmount);
+							}
+
+							$("#sparxpres-formatted-monthly-payments").text(loanCalc.formattedMonthlyPayments);
+							$("#sparxpres-compliance-text").text(loanCalc.complianceText);
+							$("#sparxpres-information-url").show();
 						} else if (loanCalc.hasOwnProperty("errorMessage")) {
-							$("#Sparxpres__dynamic-formattedMonthlyPayments").text("N/A");
-							$("#Sparxpres__dynamic-complianceText").text(loanCalc.errorMessage);
-							$("#Sparxpres__dynamic-informationUrl").hide();
+							$("#sparxpres-formatted-monthly-payments").text("N/A");
+							$("#sparxpres-compliance-text").text(loanCalc.errorMessage);
+							$("#sparxpres-information-url").hide();
 						}
 					} else {
 						$("#sparxpres_web_sale").hide();
@@ -149,60 +178,74 @@ define(['jquery'], function($){
 				});
 			},
 
-			_callRemoteLoanInformation: function (linkId, period, price, cacheKey) {
+			_callRemoteLoanInformation: function (linkId, period, price) {
 				$.getJSON("https://sparxpres.dk/app/loaninfo/", {
 					linkId: linkId,
 					period: period,
 					amount: price
 				}).done(function (loanInfo) {
 					if (loanInfo && loanInfo.hasOwnProperty("loanPeriods")) {
-						spxLoanCalcEngine.loanInfoCacheMap.set(cacheKey, loanInfo);
-						spxLoanCalcEngine._updateDynamicRange(loanInfo.loanPeriods, period, price);
-						spxLoanCalcEngine._callRemoteLoanCalculation(linkId, period, price);
+						spxLoanCalcEngine.loanId = loanInfo.loanId;
+						spxLoanCalcEngine._updateDynamicRange(loanInfo.loanPeriods, period);
 					}
 				});
 			},
 
-			_updateDynamicRange: function (loanPeriods, period, price) {
-				if (price === spxLoanCalcEngine.prevCalculationPrice) {
-					return;
-				}
+			_callRemoteXpresPayInformationPage: function(linkId) {
+				if (!linkId) return;
 
+				$.getJSON("https://sparxpres.dk/app/xprespay/info/",{
+					linkId: linkId
+				}).done(function (xpresPayInfo) {
+					if (xpresPayInfo && xpresPayInfo.hasOwnProperty("html")) {
+						$("#XpresPayInformationPageModal .sparxpres-dynamic-content").html(xpresPayInfo.html);
+					}
+				});
+			},
+
+			_updateDynamicRange: function (loanPeriods = [], period = 0) {
 				if (spxLoanCalcEngine.debug) console.log("updateSparxpresDynamicRange");
-				spxLoanCalcEngine.$sliderPeriodElem = spxLoanCalcEngine.$sliderPeriodElem || $("#Sparxpres__slider");
-				if (spxLoanCalcEngine.$sliderPeriodElem.length) {
-					if (spxLoanCalcEngine.debug) console.log("Update slider range options...");
-					spxLoanCalcEngine.$sliderPeriodElem[0].noUiSlider.updateOptions({
-						start: period,
-						range: {
-							'min': loanPeriods[0].id,
-							'max': loanPeriods[loanPeriods.length - 1].id
-						},
-						pips: {
-							mode: 'steps',
-							density: 100 / (loanPeriods.length * 2 - 2)
-						}
-					}, false);
-				} else {
-					spxLoanCalcEngine.$dropdownPeriodElem = spxLoanCalcEngine.$dropdownPeriodElem || $("#Sparxpres__dropdown select");
-					if (spxLoanCalcEngine.$dropdownPeriodElem.length) {
-						if (spxLoanCalcEngine.debug) console.log("Update dropdown range options");
-						spxLoanCalcEngine.$dropdownPeriodElem.empty();
-						$.each(loanPeriods, function (index, item) {
-							spxLoanCalcEngine.$dropdownPeriodElem.append($("<option/>", {
-								value: item.id,
-								text: item.text
-							}));
+				const periodElem = spxLoanCalcEngine._getSparxpresPeriodElement();
+				if (periodElem) {
+					if (periodElem.classList.contains("sparxpres-slider")) {
+						if (spxLoanCalcEngine.debug) console.log("Update slider range...");
+						const min = loanPeriods[0].id;
+						const max = loanPeriods[loanPeriods.length-1].id;
+
+						periodElem.setAttribute("min", min);
+						periodElem.setAttribute("max", max);
+						periodElem.value = period;
+
+						spxLoanCalcEngine._updateSliderBackground(period, min, max);
+						spxLoanCalcEngine._updateRangeSteps(loanPeriods);
+					} else if (periodElem.classList.contains("sparxpres-select")) {
+						if (spxLoanCalcEngine.debug) console.log("Update dropdown range");
+						periodElem.innerHTML = "";
+						loanPeriods.forEach(itm => {
+							periodElem.add(new Option(itm.text, itm.id, false, itm.id === period), null);
 						});
-						spxLoanCalcEngine.$dropdownPeriodElem.val(period);
 					}
 				}
 			},
 
-			_updatePeriod(period) {
-				if (spxLoanCalcEngine.$dropdownPeriodElem.length) {
-					if (spxLoanCalcEngine.debug) console.log("updatePeriod to: %d", period);
-					spxLoanCalcEngine.$dropdownPeriodElem.val(period);
+			_updateSliderBackground: function(value = 0, min = 0, max = 0) {
+				const periodElem = spxLoanCalcEngine._getSparxpresPeriodElement();
+				if (periodElem) {
+					const pct = value === min ? 0 : (value - min) / (max - min) * 100;
+					periodElem.style.setProperty("--sparxpres-slider-pct", pct + "%");
+				}
+			},
+
+			_updateRangeSteps: function(loanPeriods = []) {
+				const rangeStepsElem = spxLoanCalcEngine._getSparxpresRangeStepsElement();
+				if (rangeStepsElem) {
+					rangeStepsElem.innerHTML = "";
+					loanPeriods.forEach(itm => {
+						const divStep = document.createElement("div");
+						divStep.className = "sparxpres-slider-step";
+						divStep.textContent = itm.id;
+						rangeStepsElem.appendChild(divStep);
+					});
 				}
 			}
 		};

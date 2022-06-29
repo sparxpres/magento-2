@@ -2,30 +2,38 @@
 namespace Sparxpres\Websale\Controller\LaunchApplication;
 
 class Index extends \Magento\Framework\App\Action\Action {
-	protected $_scopeConfig;
-	protected $_checkoutSession;
+	protected $scopeConfig;
+	protected $checkoutSession;
+    protected $storeManager;
 
 	public function __construct(
 		\Magento\Framework\App\Action\Context $context,
 		\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-		\Magento\Checkout\Model\Session $checkoutSession
+		\Magento\Checkout\Model\Session $checkoutSession,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
 	) {
 		parent::__construct($context);
-		$this->_scopeConfig = $scopeConfig;
-		$this->_checkoutSession = $checkoutSession;
+		$this->scopeConfig = $scopeConfig;
+		$this->checkoutSession = $checkoutSession;
+        $this->storeManager = $storeManager;
 	}
 
 	public function execute() {
-		$linkId = $this->_scopeConfig->getValue('sparxpres/general/link_id');
-		$orderId = $this->_checkoutSession->getLastOrderId();
+        $linkId = $this->scopeConfig->getValue(
+            'sparxpres/general/link_id',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $this->storeManager->getStore()->getId()
+        );
 
-		$order = $this->_checkoutSession->getLastRealOrder();
-		$amount = ceil($order->getGrandTotal());
+		$orderId = $this->checkoutSession->getLastOrderId();
+		$order = $this->checkoutSession->getLastRealOrder();
+        $amountCents = ceil($order->getGrandTotal() * 100);
 
 		$returnUrl = $this->_url->getUrl('checkout/onepage/success/');
+        $cancelUrl = $this->_url->getUrl('checkout/cart/');
 
 		$redirect = $this->resultRedirectFactory->create();
-		$redirect->setUrl('https://sparxpres.dk/ansoegning/?linkId='.$linkId.'&transactionId='.$orderId.'&amount='.$amount.'&returnurl='.urlencode($returnUrl));
+		$redirect->setUrl('https://sparxpres.dk/ansoegning/init/?linkId='.$linkId.'&transactionId='.$orderId.'&amountCents='.$amountCents.'&returnurl='.urlencode($returnUrl).'&cancelurl='.urlencode($cancelUrl));
 		return $redirect;
 	}
 }

@@ -4,36 +4,33 @@ namespace Sparxpres\Websale\Block;
 abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Template {
 	private static $SPARXPRES_BASE_URI = 'https://app.sparxpres.dk/spx/';
 
-	protected $_objectManager;
-	private $_linkId;
-	private $_loanInformation;
+	protected $objectManager;
+	private $linkId;
+	private $loanInformation;
 
 	public function __construct(
 		\Magento\Backend\Block\Template\Context $context,
 		\Magento\Framework\ObjectManagerInterface $objectManager,
 		array $data = []
 	) {
-		$this->_objectManager = $objectManager;
+		$this->objectManager = $objectManager;
 		parent::__construct($context, $data);
 	}
 
 	abstract public function getPrice();
 
-	abstract protected function getModuleVersion();
+	abstract public function getModuleVersion();
 
 	/**
 	 * @return bool
 	 */
-	protected function isValid() {
-		if ($this->getCurrencyCode() !== 'DKK') {
-			return false;
-		} else if (empty($this->getLinkId())) {
-			return false;
-		} else if (empty($this->getLoanInformation(is_null($this->getModuleVersion()) ? null : $this->getModuleVersion()))) {
-			return false;
-		} else if (empty($this->getPrice())) {
-			return false;
-		} else if ($this->getPrice() < $this->getLoanInformation()->minAmount || $this->getPrice() > $this->getLoanInformation()->maxAmount) {
+	public function isValid() {
+		if ($this->getCurrencyCode() != 'DKK'
+            || empty($this->getLinkId())
+            || empty($this->getPrice())
+            || empty($this->getLoanInformation())
+            || $this->getPrice() < $this->getLoanInformation()->minAmount || $this->getPrice() > $this->getLoanInformation()->maxAmount
+        ) {
 			return false;
 		}
 		return true;
@@ -42,56 +39,19 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
     /**
 	 * @return string|null
 	 */
-	protected function getLinkId() {
-		if (is_null($this->_linkId)) {
-			$this->_linkId = $this->_scopeConfig->getValue('sparxpres/general/link_id');
-			if (empty($this->_linkId) || strlen($this->_linkId) !== 36) {
-				$this->_linkId = null;
-			}
+	public function getLinkId() {
+		if (is_null($this->linkId)) {
+            $this->linkId = $this->_scopeConfig->getValue(
+                'sparxpres/general/link_id',
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+                $this->_storeManager->getStore()->getId()
+            );
+
+            if (empty($this->linkId) || strlen($this->linkId) != 36) {
+				$this->linkId = null;
+            }
 		}
-		return $this->_linkId;
-	}
-
-	/**
-	 * @return string
-	 */
-	protected function getDisplayContent() {
-		// Build the content return string
-		$content = '<div class="SparxpresDisplayControl">' . $this->getHtmlContent() . '</div>';
-
-		if ($this->isUseSlider()) {
-			$content .= '<div style="display: none;">';
-			$content .= '<svg id="sparxpres_web_sale_init" width="1" height="1"';
-			$content .= ' data-default-period="' . $this->getDefaultPeriod() . '"';
-			$content .= ' data-periods="' . htmlentities(json_encode($this->getLoanPeriods()), ENT_COMPAT) . '"';
-			$content .= '></svg>';
-			$content .= '</div>';
-		}
-
-		// Should we change main color?
-		$mColor = $this->getMainColor();
-		if (!empty($mColor)) {
-			$content .= '<style>';
-            $content .= '.Sparxpres__main-color {color: ' . $mColor . ';}';
-            $content .= '.Sparxpres__modal-open {background-color: ' . $mColor . ';}';
-            $content .= '.SparxpresSlider .spxUi-connect, .SparxpresSlider .spxUi-handle .spxUi-touch-area {color: ' . $mColor . '; background: ' . $mColor . ';}';
-			$content .= '</style>';
-		}
-		return $content;
-	}
-
-	/**
-	 * Get the loan information text from sparxpres
-	 * @return string|void
-	 */
-	protected function getInformationPageContent() {
-		$url = self::$SPARXPRES_BASE_URI . "webintegration/content?wrapper=simple&type=information&linkId=" . $this->getLinkId();
-		$data = $this->get_remote_json($url);
-		if (empty($data)) {
-			return;
-		}
-
-		return '<div id="sparxpres_web_sale_info" class="sparxpres_information">' . $data->html . '</div>';
+		return $this->linkId;
 	}
 
 	/**
@@ -105,21 +65,39 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
 	 * @return mixed
 	 */
 	private function getMainColor() {
-		return $this->_scopeConfig->getValue('sparxpres/general/main_color');
+		$color = $this->_scopeConfig->getValue(
+            'sparxpres/general/main_color',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $this->_storeManager->getStore()->getId()
+        );
+
+        return empty($color) || strlen($color) != 7 ? null : $color;
 	}
 
-	/**
-	 * @return mixed
-	 */
-	protected function getInformationPageId() {
-		return $this->_scopeConfig->getValue('sparxpres/general/info_page_id');
-	}
+    /**
+     * @return mixed
+     */
+    private function getSliderBackgroundColor() {
+        $color = $this->_scopeConfig->getValue(
+            'sparxpres/general/slider_bg_color',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $this->_storeManager->getStore()->getId()
+        );
 
-	/**
+        return empty($color) || strlen($color) != 7 ? null : $color;
+    }
+
+    /**
 	 * @return string
 	 */
-	private function getWrapperType() {
-		$wType = $this->_scopeConfig->getValue('sparxpres/general/display_wrapper_type_product');
+	private function getWrapperType($isProductPage = true) {
+		$wType = $this->_scopeConfig->getValue(
+            $isProductPage
+                ? 'sparxpres/general/display_wrapper_type_product'
+                : 'sparxpres/general/display_wrapper_type_cart',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $this->_storeManager->getStore()->getId()
+        );
 		return empty($wType) ? 'simple' : $wType;
 	}
 
@@ -127,21 +105,19 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
 	 * @return string
 	 */
 	private function getViewType($loanPeriodCount = 0) {
-        if ($loanPeriodCount === 0) $loanPeriodCount = $this->getLoanPeriodCount();
-        if ($loanPeriodCount <= 1 || preg_match('/(msie|trident)/i', $_SERVER['HTTP_USER_AGENT'])) {
+        if ($loanPeriodCount == 0) $loanPeriodCount = $this->getLoanPeriodCount();
+        if ($loanPeriodCount < 2 || preg_match('/(msie|trident)/i', $_SERVER['HTTP_USER_AGENT'])) {
             return "plain";
         }
 
-		$vType = $this->_scopeConfig->getValue('sparxpres/general/display_view_type');
+		$vType = $this->_scopeConfig->getValue(
+            'sparxpres/general/display_view_type',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $this->_storeManager->getStore()->getId()
+        );
+
 		return empty($vType) ? 'slider' : $vType;
 	}
-
-    /**
-     * @return bool
-     */
-    protected function isUseSlider() {
-        return $this->getViewType() === 'slider';
-    }
 
 	/**
 	 * @return mixed
@@ -164,74 +140,94 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
 	/**
 	 * @return mixed
 	 */
-	protected function getDefaultPeriod() {
-		$lPeriods = $this->getLoanPeriods();
-		if (!empty($lPeriods)) {
-			$_price = $this->getPrice();
-			$_defaultRowIdx = ceil(count($lPeriods)/2)-1;
-			while ($_defaultRowIdx > 0 && floor($_price / $lPeriods[$_defaultRowIdx]->id) < 100) {
-				$_defaultRowIdx -= 1;
-			}
-			return $lPeriods[$_defaultRowIdx]->id;
-		}
+	public function getDefaultPeriod() {
+        $lInfo = $this->getLoanInformation();
+        if (!empty($lInfo)) {
+            return $lInfo->defaultPeriod;
+        }
+        return 12;
 	}
 
     /**
-     * @return false|mixed
+     * @return string
      */
-    protected function isDynamicPeriod() {
+    public function getWebSaleElementStyle() {
+        $style = "";
+
+        $mColor = $this->getMainColor();
+        $sBgColor = $this->getSliderBackgroundColor();
+        if (!empty($mColor) || !empty($sBgColor)) {
+            $style .= "style=\"";
+            if (!empty($mColor)) {
+                $style .= "--sparxpres-main-color:".$mColor.";";
+            }
+            if (!empty($sBgColor)) {
+                $style .= "--sparxpres-slider-bg-color:".$sBgColor.";";
+            }
+            $style .= "\"";
+        }
+
+        return $style;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLoanId() {
         $lInfo = $this->getLoanInformation();
         if (!empty($lInfo)) {
-            return $lInfo->dynamicPeriod;
+            return $lInfo->loanId;
         }
-        return false;
+        return 0;
     }
 
 	/**
 	 * @return false|mixed|string|void|null
 	 */
-	private function getHtmlContent() {
-		$linkId = $this->getLinkId();
+	public function getHtmlContent($isProductPage = true) {
+		$lId = $this->getLinkId();
 		$price = $this->getPrice();
 		$loanPeriods = $this->getLoanPeriods();
-		$defaultPeriod = $this->getDefaultPeriod();
+        $loanInfo = $this->getLoanInformation();
 
-		$pageId = $this->getInformationPageId();
-        $infoPageUrl = $pageId > 0 ? $this->_objectManager->create('\Magento\Cms\Helper\Page')->getPageUrl($pageId) : null;
-
-		$wrapperType = $this->getWrapperType();
+		$wrapperType = $this->getWrapperType($isProductPage);
 		$viewType = $this->getViewType(count($loanPeriods));
-		$html = file_get_contents( dirname(__FILE__) . '/static_html/sparxpres-'.$wrapperType.'-'.$viewType.'.html');
-		$html = self::get_html_with_loan_calculations($linkId, $defaultPeriod, $loanPeriods, $viewType, $price, $html, $infoPageUrl);
-		if (empty($html)) {
-			return;
-		}
+		$html = file_get_contents( dirname(__FILE__) . '/static_html/sparxpres-'.$wrapperType.'.html');
+		$html = self::get_html_with_loan_calculations(
+            $lId,
+            $loanInfo,
+            $price,
+            $this->getDefaultPeriod(),
+            $loanPeriods,
+            $viewType,
+            $html
+        );
 
-		return $html;
+		return empty($html) ? '' : $html;
 	}
 
 	/**
 	 * Get the loan information
-	 * @param $version
 	 * @return mixed|null
 	 */
-	private function getLoanInformation($version = null) {
-		if (is_null($this->_loanInformation)) {
-			$linkId = $this->getLinkId();
+	private function getLoanInformation() {
+		if (is_null($this->loanInformation)) {
+			$lId = $this->getLinkId();
 			$price = $this->getPrice();
-			if (empty($linkId) || empty($price)) {
+			if (empty($lId) || empty($price)) {
 				return null;
 			}
 
-			$webSaleVersion = '';
+            $webSaleVersion = '';
+            $version = $this->getModuleVersion();
 			if (isset($version)) {
 				$webSaleVersion = '&websaleversion=magento2_v' . $version;
 			}
 
-			$url = self::$SPARXPRES_BASE_URI . "loaninfo?linkId=" . $linkId . "&amount=" . $price . $webSaleVersion;
-			$this->_loanInformation = self::get_remote_json($url);
+			$url = self::$SPARXPRES_BASE_URI . "loaninfo?linkId=" . $lId . "&amount=" . $price . $webSaleVersion;
+			$this->loanInformation = self::get_remote_json($url);
 		}
-		return $this->_loanInformation;
+		return $this->loanInformation;
 	}
 
 	/**
@@ -252,48 +248,97 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
 
 	/**
 	 * @param $linkId
+     * @param $loanInformation
 	 * @param $period
 	 * @param $loanPeriods
 	 * @param $viewType
 	 * @param $price
 	 * @param $html
-	 * @param $informationUrl
 	 * @return mixed|string|null
 	 */
-	private static function get_html_with_loan_calculations($linkId, $period, $loanPeriods, $viewType, $price, $html, $informationUrl) {
-		if (empty($html)) {
+	private static function get_html_with_loan_calculations($linkId, $loanInformation, $price, $period, $loanPeriods, $viewType, $html) {
+		if (empty($html) || empty($loanInformation)) {
 			return null;
 		}
 
-		$_monthlyPayments = 'N/A';
-		$_complianceText = 'N/A';
-		$loanCalc = self::getLoanCalculation($linkId, $period, $price);
-        if (!empty($loanCalc) && !empty($loanCalc->success) && $loanCalc->success) {
-			$_monthlyPayments = $loanCalc->formattedMonthlyPayments;
-			$_complianceText = $loanCalc->complianceText;
-		}
-
-		if ($viewType === 'dropdown') {
-            $optionsHtml = '<select id="Sparxpres__dropdown_period_selection" class="Sparxpres__select-css" onchange="window.dispatchEvent(new CustomEvent(\'sparxpresSelectRuntimeChange\', {detail: {period: this.value}}));">';
-			foreach ($loanPeriods as $loanPeriod) {
-				$optionsHtml .= '<option value="' . $loanPeriod->id . '" ' . ($loanPeriod->id === $period ? "selected" : "") . '>' . $loanPeriod->text . '</option>';
-			}
-			$optionsHtml .= '</select>';
-
-			$html = str_replace('##PERIOD_OPTIONS##', $optionsHtml, $html);
-		}
-
-		$html = str_replace('##MONTHLY_PAYMENTS##', $_monthlyPayments, $html);
-		$html = str_replace('##COMPLIANCE_TEXT##', $_complianceText, $html);
-        if (empty($informationUrl)) {
-            $html = str_replace('"##INFORMATION_URL##"', '"javascript:void(0);" onclick="window.dispatchEvent(new Event(\'sparxpresInformationPageOpen\'));"', $html);
-        } else {
-            $html = str_replace('##INFORMATION_URL##', $informationUrl, $html);
+        $doLoanCalculation = $loanInformation->loanId > 0
+            && $price >= $loanInformation->minAmount
+            && $price <= $loanInformation->maxAmount;
+        $isXpresPayEnabled = self::is_xprespay_enabled($loanInformation, $price);
+        if (!$doLoanCalculation && !$isXpresPayEnabled) {
+            return null;
         }
-		return $html;
-	}
 
-	/**
+        if (!$doLoanCalculation) {
+            $html = "";
+        } else {
+            $monthlyPayments = 'N/A';
+            $complianceText = 'N/A';
+
+            $loanCalc = self::getLoanCalculation($linkId, $period, $price);
+            if (isset($loanCalc) && $loanCalc->success) {
+                $monthlyPayments = $loanCalc->formattedMonthlyPayments;
+                $complianceText = $loanCalc->complianceText;
+            } else {
+                $html = "";
+            }
+
+            $periodHtml = '';
+            if ($viewType == 'dropdown') {
+                $periodHtml = '<select class="sparxpres-select" onchange="window.dispatchEvent(new CustomEvent(\'sparxpresPeriodChange\', {detail: {period: this.value}}));">';
+                foreach ($loanPeriods as $loanPeriod) {
+                    $periodHtml .= '<option value="' . $loanPeriod->id . '" ' . ($loanPeriod->id == $period ? "selected" : "") . '>' . $loanPeriod->text . '</option>';
+                }
+                $periodHtml .= '</select>';
+            } else if ($viewType == 'slider') {
+                $minPeriod = $loanPeriods[0]->id;
+                $maxPeriod = $loanPeriods[count($loanPeriods) - 1]->id;
+                $step = $loanPeriods[1]->id - $loanPeriods[0]->id;
+
+                $style = "";
+                if ($period != $minPeriod) {
+                    $pct = ($period - $minPeriod) / ($maxPeriod - $minPeriod) * 100;
+                    $style = "style=\"--sparxpres-slider-pct:" . round($pct, 2) . "%;\"";
+                }
+                $periodHtml = '<input type="range" class="sparxpres-slider" prefix="mdr." min="' . $minPeriod . '" max="' . $maxPeriod . '" step="' . $step . '" value="' . $period . '" onchange="window.dispatchEvent(new CustomEvent(\'sparxpresPeriodChange\', {detail: {period: this.value}}));" oninput="window.dispatchEvent(new CustomEvent(\'sparxpresPeriodInput\', {detail: {period: this.value, min: this.getAttribute(\'min\'), max: this.getAttribute(\'max\')}}));" ' . $style . '>';
+
+                $periodHtml .= '<div class="sparxpres-slider-steps">';
+                foreach ($loanPeriods as $loanPeriod) {
+                    $periodHtml .= '<div class="sparxpres-slider-step">' . $loanPeriod->id . '</div>';
+                }
+                $periodHtml .= '</div>';
+            }
+
+            if (!empty($periodHtml)) {
+                $periodHtml = '<div id="sparxpres_web_sale_period">' . $periodHtml . '</div>';
+            }
+
+            $html = str_replace('##PERIOD_HTML##', $periodHtml, $html);
+            $html = str_replace('##MONTHLY_PAYMENTS##', $monthlyPayments, $html);
+            $html = str_replace('##COMPLIANCE_TEXT##', $complianceText, $html);
+        }
+
+        if ($isXpresPayEnabled) {
+            $html .= file_get_contents( dirname(__FILE__) . '/static_html/xprespay.html');
+        }
+
+        return $html;
+    }
+
+    /**
+     * Is credit enabled?
+     * @param $loanInformation
+     * @param $price
+     * @return bool
+     */
+    public static function is_xprespay_enabled($loanInformation, $price = 0) {
+        if (isset($loanInformation) && $loanInformation->spxCreditEnabled) {
+            return $price <= $loanInformation->spxCreditMaximum;
+        }
+        return false;
+    }
+
+    /**
 	 * Get json from url and return it as an object
 	 * @param $url
 	 * @return mixed|null

@@ -3,6 +3,7 @@
     <policies>
         <policy id="connect-src">
             <values>
+                <value id="connect_sub_sparxpres_dk" type="host">*.sparxpres.dk</value>
                 <value id="connect_sparxpres_dk" type="host">sparxpres.dk</value>
             </values>
         </policy>

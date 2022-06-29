@@ -46,7 +46,7 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
 
             $status = $params->status ?? null;
             $transactionId = $params->transactionId ?? null;
-            $amount = $params->amount ?? null;
+            $amount = $params->amount ?? 0;
             if (empty($status) || empty($transactionId)) {
                 throw new \InvalidArgumentException("Invalid json content");
             }

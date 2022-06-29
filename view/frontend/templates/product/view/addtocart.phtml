@@ -1,23 +1,30 @@
 <?php
 if ($block->isValid()) {
-	$content = $block->getDisplayContent();
+    $content = $block->getContent();
 	$linkId = $block->getLinkId();
 	$price = $block->getPrice();
-    $defaultPeriod = $block->getDefaultPeriod();
-    $dynamicPeriod = $block->isDynamicPeriod() ? '1' : '0';
+    $period = $block->getDefaultPeriod();
+    $loanId = $block->getLoanId();
+    $version = $block->getModuleVersion();
+    $style = $block->getWebSaleElementStyle();
 
-	echo '<div id="sparxpres_web_sale" class="sparxpres_product" data-link-id="'.$linkId.'" data-price="'.$price.'" data-default-period="'.$defaultPeriod.'" data-dynamic-period="'.$dynamicPeriod.'">' . $content . '</div>';
+    echo '<div
+ id="sparxpres_web_sale"
+ class="sparxpres_product"
+ data-link-id="'.$linkId.'"
+ data-price="'.$price.'"
+ data-period="'.$period.'"
+ data-loan-id="'.$loanId.'"
+ data-version="'.$version.'"
+ '.$style.'>' . $content . '</div>';
 
     echo '
 <script type="text/x-magento-init">
 {
   "#sparxpres_web_sale": {
       "Sparxpres_Websale/js/sparxpres-websale": {}
-  },
-  "#sparxpres_web_sale_init": {
-      "Sparxpres_Websale/js/sparxpres-websale-slider": {}
   }
 }
 </script>
-    ';
+';
 }

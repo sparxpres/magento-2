@@ -16,9 +16,4 @@ class Head extends \Magento\Framework\View\Element\Template {
         $asset = $this->assetRepository->createAsset('Sparxpres_Websale::css/sparxpres-websale.css');
         return $asset->getUrl();
     }
-
-    public function getSparxpresSliderCSS() {
-        $asset = $this->assetRepository->createAsset('Sparxpres_Websale::css/sparxpres-websale-slider.css');
-        return $asset->getUrl();
-    }
 }

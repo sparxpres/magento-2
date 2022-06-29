@@ -2,52 +2,40 @@
 namespace Sparxpres\Websale\Block;
 
 class Product extends SparxpresTemplate {
-	protected $_helper;
-	private $_price;
+	protected $helper;
+	private $price;
+    private $moduleList;
 
 	public function __construct(
 		\Magento\Backend\Block\Template\Context $context,
 		\Magento\Framework\ObjectManagerInterface $objectManager,
 		\Magento\Catalog\Helper\Data $helper,
+        \Magento\Framework\Module\ModuleListInterface $moduleList,
 		array $data = []
 	) {
-		$this->_helper = $helper;
+		$this->helper = $helper;
+        $this->moduleList = $moduleList;
 		parent::__construct($context, $objectManager, $data);
 	}
 
-	protected function getModuleVersion() {
-		return null;	// Don't send module version on product pages
-	}
-
-	public function isValid() {
-		return parent::isValid();
-	}
-
-	public function getLinkId() {
-		return parent::getLinkId();
-	}
-
-	public function getDisplayContent() {
-		return parent::getDisplayContent();
-	}
-
-    public function getDefaultPeriod() {
-        return parent::getDefaultPeriod();
-    }
-
-    public function isDynamicPeriod() {
-        return parent::isDynamicPeriod();
+    public function getModuleVersion() {
+        $moduleInfo = $this->moduleList->getOne('Sparxpres_Websale');
+        return $moduleInfo['setup_version'];
     }
 
     public function getPrice() {
-		if (is_null($this->_price)) {
-			$product = $this->_helper->getProduct();
+		if (is_null($this->price)) {
+			$product = $this->helper->getProduct();
 			if (!$product->getId()) {
 				throw new LocalizedException(__('Failed to initialize product'));
 			}
-            $this->_price = ceil($product->getFinalPrice());
+            $this->price = ceil($product->getFinalPrice());
 		}
-		return $this->_price;
+		return $this->price;
 	}
+
+    public function getContent() {
+        return parent::getHtmlContent(true);
+    }
 
 }
