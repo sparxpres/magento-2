@@ -29,7 +29,6 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
             || empty($this->getLinkId())
             || empty($this->getPrice())
             || empty($this->getLoanInformation())
-            || $this->getPrice() < $this->getLoanInformation()->minAmount || $this->getPrice() > $this->getLoanInformation()->maxAmount
         ) {
 			return false;
 		}
