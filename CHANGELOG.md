@@ -9,3 +9,6 @@
 ## [1.0.12] - 2022-06-02
 - Slider refactored to use html5 range
 - XpresPay added
+
+## [1.0.13] - 2022-07-01
+- Error corrected
