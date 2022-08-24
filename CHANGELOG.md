@@ -12,3 +12,6 @@
 
 ## [1.0.13] - 2022-07-01
 - Error corrected
+
+## [1.0.14] - 2022-08-24
+- Always include vat on product page prices

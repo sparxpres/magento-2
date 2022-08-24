@@ -29,7 +29,7 @@ class Product extends SparxpresTemplate {
 			if (!$product->getId()) {
 				throw new LocalizedException(__('Failed to initialize product'));
 			}
-            $this->price = ceil($product->getFinalPrice());
+            $this->price = ceil($this->helper->getTaxPrice($product, $product->getFinalPrice(), true));
 		}
 		return $this->price;
 	}
