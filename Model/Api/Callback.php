@@ -54,7 +54,7 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
             $order = $this->orderRepository->get($transactionId);
             $orderAmount = ceil($order->getGrandTotal());
             if (($status === 'NEW' || $status === 'WAITING_FOR_SIGNATURE' || $status === 'RESERVED' || $status === 'CAPTURED') && $orderAmount !== ceil($amount)) {
-                throw new \InvalidArgumentException("Invalid amount");
+                throw new \InvalidArgumentException("Invalid amount, order amount is: ".$orderAmount);
             }
 
             $originalStatus = $order->getStatus();
