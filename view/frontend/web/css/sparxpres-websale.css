@@ -33,6 +33,10 @@
 	width: 140px;
 }
 
+.xprespay-pay-bg-color {
+	fill: var(--sparxpres-main-color);
+}
+
 .sparxpres-headline {
 	font-size: 1.2em;
 	font-weight: 700;
