@@ -17,11 +17,12 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
      * @param \Sparxpres\Websale\Api\Data\CallbackResponseInterfaceFactory $responseFactory
      */
-    public function __construct(\Magento\Framework\App\RequestInterface $request,
-                                \Magento\Framework\App\ResponseInterface $response,
-                                \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
-                                \Sparxpres\Websale\Api\Data\CallbackResponseInterfaceFactory $responseFactory)
-    {
+    public function __construct(
+        \Magento\Framework\App\RequestInterface $request,
+        \Magento\Framework\App\ResponseInterface $response,
+        \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
+        \Sparxpres\Websale\Api\Data\CallbackResponseInterfaceFactory $responseFactory
+    ) {
         $this->request = $request;
         $this->response = $response;
         $this->orderRepository = $orderRepository;
@@ -32,7 +33,8 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
      * doPost method
      * @return \Sparxpres\Websale\Api\Data\CallbackResponseInterface
      */
-    public function updateOrderStatus() {
+    public function updateOrderStatus()
+    {
         try {
             // @var \Sparxpres\Websale\Api\Data\CallbackResponseInterface
             $resp = $this->responseFactory->create();
@@ -46,15 +48,39 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
 
             $status = $params->status ?? null;
             $transactionId = $params->transactionId ?? null;
-            $amount = $params->amount ?? 0;
+            $cbAmount = ceil($params->amount ?? 0);
+            $cbAmountCents = ceil($params->amountCents ?? 0);
             if (empty($status) || empty($transactionId)) {
                 throw new \InvalidArgumentException("Invalid json content");
             }
 
             $order = $this->orderRepository->get($transactionId);
-            $orderAmount = ceil($order->getGrandTotal());
-            if (($status === 'NEW' || $status === 'WAITING_FOR_SIGNATURE' || $status === 'RESERVED' || $status === 'CAPTURED') && $orderAmount !== ceil($amount)) {
-                throw new \InvalidArgumentException("Invalid amount, order amount is: ".$orderAmount);
+            if (empty($order)) {
+                return new WP_Error('error', 'Invalid order');
+            }
+
+            if ($status === 'NEW'
+                || $status === 'WAITING_FOR_SIGNATURE'
+                || $status === 'RESERVED'
+                || $status === 'CAPTURED'
+            ) {
+                if ($cbAmountCents > 0) {
+                    $orderAmtCents = ceil($order->getGrandTotal() * 100);
+                    if ($orderAmtCents < $cbAmountCents - 10 || $orderAmtCents > $cbAmountCents + 10) {
+                        // more than +/- 10 cents diff
+                        throw new \InvalidArgumentException(
+                            'Invalid amount (expected: '.$cbAmountCents.', was: '.$orderAmtCents.')'
+                        );
+                    }
+                } else {
+                    $orderAmount = ceil($order->getGrandTotal());
+                    if ($orderAmount < $cbAmount - 1 || $orderAmount > $cbAmount + 1) {
+                        // more thant +/- 1 kr diff
+                        throw new \InvalidArgumentException(
+                            'Invalid amount (expected: '.$cbAmount.', was: '.$orderAmount.')'
+                        );
+                    }
+                }
             }
 
             $originalStatus = $order->getStatus();
@@ -63,7 +89,10 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
                 || $originalStatus === Order::STATE_CLOSED
                 || $originalStatus === Order::STATE_COMPLETE
             ) {
-                $order->addCommentToStatusHistory("Sparxpres sendte callback (".$status."), men ordrens status var ".$originalStatus.", og er derfor IKKE opdateret.");
+                $order->addCommentToStatusHistory(
+                    "Sparxpres sendte callback (".$status."), men ordrens status var "
+                    .$originalStatus.", og er derfor IKKE opdateret."
+                );
                 $order->save();
 
                 $resp->setSuccess(true);
@@ -71,29 +100,53 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
             } else {
                 switch ($status) {
                     case "NEW":
-                        $order->addCommentToStatusHistory("Sparxpres har modtaget låneansøgningen.", Order::STATE_PENDING_PAYMENT, false);
+                        $order->addCommentToStatusHistory(
+                            "Sparxpres har modtaget låneansøgningen.",
+                            Order::STATE_PENDING_PAYMENT,
+                            false
+                        );
                         $order->save();
                         break;
                     case "WAITING_FOR_SIGNATURE":
-                        $order->addCommentToStatusHistory("Sparxpres afventer kundens underskrift.", Order::STATE_PENDING_PAYMENT, false);
+                        $order->addCommentToStatusHistory(
+                            "Sparxpres afventer kundens underskrift.",
+                            Order::STATE_PENDING_PAYMENT,
+                            false
+                        );
                         $order->save();
                         break;
                     case "REGRETTED":
                     case "CANCELED":
                     case "CANCELLED":
-                        $order->addCommentToStatusHistory("Sparxpres har annulleret lånet.", Order::STATE_CANCELED, false);
+                        $order->addCommentToStatusHistory(
+                            "Sparxpres har annulleret lånet.",
+                            Order::STATE_CANCELED,
+                            false
+                        );
                         $order->save();
                         break;
                     case "RESERVED":
-                        $order->addCommentToStatusHistory("Lånet er klar til frigivelse hos Sparxpres.", Order::STATE_PAYMENT_REVIEW, false);
+                        $order->addCommentToStatusHistory(
+                            "Lånet er klar til frigivelse hos Sparxpres.",
+                            Order::STATE_PAYMENT_REVIEW,
+                            false
+                        );
                         $order->save();
                         break;
                     case "CAPTURED":
-                        $order->addCommentToStatusHistory("Lånet er sat til udbetaling hos Sparxpres.", Order::STATE_PROCESSING, false);
+                        $order->addCommentToStatusHistory(
+                            "Lånet er sat til udbetaling hos Sparxpres.",
+                            Order::STATE_PROCESSING,
+                            false
+                        );
                         $order->save();
                         break;
                     case "DECLINE":
-                        $order->addCommentToStatusHistory("Sparxpres har givet afslag på låneansøgningen.", Order::STATE_CANCELED, false);
+                        $order->addCommentToStatusHistory(
+                            "Sparxpres har givet afslag på låneansøgningen.",
+                            Order::STATE_CANCELED,
+                            false
+                        );
                         $order->save();
                         break;
                     default:
@@ -102,7 +155,7 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
                 $resp->setSuccess(true);
             }
             return $resp;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new \Magento\Framework\Exception\ValidatorException(__($e->getMessage()));
         }
     }

@@ -15,3 +15,7 @@
 
 ## [1.0.14] - 2022-08-24
 - Always include vat on product page prices
+
+## [1.0.15] - 2022-11-02
+- XpresPay added as separate payment method
+- Bugfixes

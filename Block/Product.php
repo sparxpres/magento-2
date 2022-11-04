@@ -1,40 +1,44 @@
 <?php
 namespace Sparxpres\Websale\Block;
 
-class Product extends SparxpresTemplate {
-	protected $helper;
-	private $price;
+class Product extends SparxpresTemplate
+{
+    protected $helper;
+    private $price;
     private $moduleList;
 
-	public function __construct(
-		\Magento\Backend\Block\Template\Context $context,
-		\Magento\Framework\ObjectManagerInterface $objectManager,
-		\Magento\Catalog\Helper\Data $helper,
+    public function __construct(
+        \Magento\Backend\Block\Template\Context $context,
+        \Magento\Framework\ObjectManagerInterface $objectManager,
+        \Magento\Catalog\Helper\Data $helper,
         \Magento\Framework\Module\ModuleListInterface $moduleList,
-		array $data = []
-	) {
-		$this->helper = $helper;
+        array $data = []
+    ) {
+        $this->helper = $helper;
         $this->moduleList = $moduleList;
-		parent::__construct($context, $objectManager, $data);
-	}
+        parent::__construct($context, $objectManager, $data);
+    }
 
-    public function getModuleVersion() {
+    public function getModuleVersion()
+    {
         $moduleInfo = $this->moduleList->getOne('Sparxpres_Websale');
         return $moduleInfo['setup_version'];
     }
 
-    public function getPrice() {
-		if (is_null($this->price)) {
-			$product = $this->helper->getProduct();
-			if (!$product->getId()) {
-				throw new LocalizedException(__('Failed to initialize product'));
-			}
+    public function getPrice()
+    {
+        if (is_null($this->price)) {
+            $product = $this->helper->getProduct();
+            if (!$product->getId()) {
+                throw new LocalizedException(__('Failed to initialize product'));
+            }
             $this->price = ceil($this->helper->getTaxPrice($product, $product->getFinalPrice(), true));
-		}
-		return $this->price;
-	}
+        }
+        return $this->price;
+    }
 
-    public function getContent() {
+    public function getContent()
+    {
         return parent::getHtmlContent(true);
     }
 

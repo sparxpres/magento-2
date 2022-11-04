@@ -1,5 +1,5 @@
 <?php
-namespace Sparxpres\Websale\Controller\LaunchApplication;
+namespace Sparxpres\Websale\Controller\LaunchXpresPay;
 
 class Index extends \Magento\Framework\App\Action\Action
 {
@@ -36,7 +36,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
         $redirect = $this->resultRedirectFactory->create();
         $redirect->setUrl(
-            'https://sparxpres.dk/ansoegning/'
+            'https://sparxpres.dk/app/xprespay/betal/'
             .'?linkId='.$linkId
             .'&transactionId='.$orderId
             .'&amountCents='.$amountCents

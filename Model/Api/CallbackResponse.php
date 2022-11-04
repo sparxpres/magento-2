@@ -11,7 +11,8 @@ class CallbackResponse implements CallbackResponseInterface
     /**
      * Constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->success = false;
         $this->message = null;
     }
@@ -20,7 +21,8 @@ class CallbackResponse implements CallbackResponseInterface
      * @api
      * @return bool
      */
-    public function getSuccess() {
+    public function getSuccess()
+    {
         return $this->success;
     }
 
@@ -29,7 +31,8 @@ class CallbackResponse implements CallbackResponseInterface
      * @param $value bool
      * @return null
      */
-    public function setSuccess($value = false) {
+    public function setSuccess($value = false)
+    {
         $this->success = $value;
     }
 
@@ -37,7 +40,8 @@ class CallbackResponse implements CallbackResponseInterface
      * @api
      * @return string|null
      */
-    public function getMessage() {
+    public function getMessage()
+    {
         return $this->message;
     }
 
@@ -46,7 +50,8 @@ class CallbackResponse implements CallbackResponseInterface
      * @param $value string
      * @return null
      */
-    public function setMessage($value) {
+    public function setMessage($value)
+    {
         $this->message = $value;
     }
 

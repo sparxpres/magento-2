@@ -32,7 +32,8 @@ class Cart extends SparxpresTemplate
         return $this->price;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         return parent::getHtmlContent(false);
     }
 }

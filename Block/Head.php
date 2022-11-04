@@ -1,7 +1,8 @@
 <?php
 namespace Sparxpres\Websale\Block;
 
-class Head extends \Magento\Framework\View\Element\Template {
+class Head extends \Magento\Framework\View\Element\Template
+{
     protected $assetRepository;
 
     public function __construct(
@@ -12,7 +13,8 @@ class Head extends \Magento\Framework\View\Element\Template {
         parent::__construct($context, $data);
     }
 
-    public function getSparxpresCSS() {
+    public function getSparxpresCSS()
+    {
         $asset = $this->assetRepository->createAsset('Sparxpres_Websale::css/sparxpres-websale.css');
         return $asset->getUrl();
     }
