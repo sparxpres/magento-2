@@ -125,10 +125,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
      */
     private function getViewType($loanPeriodCount = 0)
     {
-        if ($loanPeriodCount == 0) {
-            $loanPeriodCount = $this->getLoanPeriodCount();
-        }
-        if ($loanPeriodCount < 2 || preg_match('/(msie|trident)/i', $_SERVER['HTTP_USER_AGENT'])) {
+        if ($loanPeriodCount < 2) {
             return "plain";
         }
 
@@ -147,7 +144,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
     private function getLoanPeriods()
     {
         $lInfo = $this->getLoanInformation();
-        if (!empty($lInfo)) {
+        if (!empty($lInfo) && property_exists($lInfo, "loanPeriods")) {
             return $lInfo->loanPeriods;
         }
         return array();
@@ -167,7 +164,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
     public function getDefaultPeriod()
     {
         $lInfo = $this->getLoanInformation();
-        if (!empty($lInfo)) {
+        if (!empty($lInfo) && property_exists($lInfo, "defaultPeriod")) {
             return $lInfo->defaultPeriod;
         }
         return 12;
@@ -202,7 +199,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
     public function getLoanId()
     {
         $lInfo = $this->getLoanInformation();
-        if (!empty($lInfo)) {
+        if (!empty($lInfo) && property_exists($lInfo, "loanId")) {
             return $lInfo->loanId;
         }
         return 0;
