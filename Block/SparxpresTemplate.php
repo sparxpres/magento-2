@@ -3,7 +3,7 @@ namespace Sparxpres\Websale\Block;
 
 abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Template
 {
-    private static $SPARXPRES_BASE_URI = 'https://app.sparxpres.dk/spx/';
+    private static $SPARXPRES_BASE_URI = 'https://sparxpres.dk/app';
 
     protected $objectManager;
     private $linkId;
@@ -246,7 +246,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
                 $webSaleVersion = '&websaleversion=magento2_v' . $version;
             }
 
-            $url = self::$SPARXPRES_BASE_URI . "loaninfo?linkId=" . $lId . "&amount=" . $price . $webSaleVersion;
+            $url = self::$SPARXPRES_BASE_URI . "/loaninfo?linkId=" . $lId . "&amount=" . $price . $webSaleVersion;
             $this->loanInformation = self::get_remote_json($url);
         }
         return $this->loanInformation;
@@ -265,7 +265,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
             return null;
         }
 
-        $url = self::$SPARXPRES_BASE_URI . "loancalc?linkId=" . $linkId . "&period=" . $period . "&amount=" . $price;
+        $url = self::$SPARXPRES_BASE_URI . "/loancalc?linkId=" . $linkId . "&period=" . $period . "&amount=" . $price;
         return self::get_remote_json($url);
     }
 

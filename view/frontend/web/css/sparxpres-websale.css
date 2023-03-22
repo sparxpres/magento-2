@@ -14,6 +14,7 @@
 	text-align: left;
 	font-weight: normal;
 	margin-top: 10px;
+	max-width: 600px;
 }
 
 #sparxpres_web_sale .sparxpres-container {
@@ -28,13 +29,8 @@
 	height: 26px;
 }
 
-.sparxpres-logo svg,
-.sparxpres-xprespay-logo svg {
+.sparxpres-logo svg {
 	width: 140px;
-}
-
-.xprespay-pay-bg-color {
-	fill: var(--sparxpres-main-color);
 }
 
 .sparxpres-headline {
@@ -74,24 +70,8 @@
 	margin-top: 5px;
 }
 
-.sparxpres-xprespay {
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: -ms-flexbox;
-	display: flex;
-	-webkit-box-pack: justify;
-	-webkit-justify-content: space-between;
-	-ms-flex-pack: justify;
-	justify-content: space-between;
-	position: relative;
-}
-
-.sparxpres-xprespay .sparxpres-xprespay-logo {
-	margin-left: auto;
-}
-
 .sparxpres-read-more {
-	text-decoration-line:underline;
+	text-decoration-line: underline;
 	text-decoration-thickness: 1px;
 	text-underline-offset: 0.25ch;
 }
@@ -102,12 +82,72 @@
 	text-decoration-style: dashed;
 }
 
-input:focus,
-select:focus,
-textarea:focus,
-button:focus,
-.spxUi-handle:focus {
+#sparxpres_web_sale input:focus,
+#sparxpres_web_sale select:focus,
+#sparxpres_web_sale textarea:focus,
+#sparxpres_web_sale button:focus {
 	outline: none;
+}
+
+/**
+ * XpresPay
+ */
+.sparxpres-xprespay-content {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: justify;
+	-webkit-justify-content: space-between;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	position: relative;
+
+	padding: 10px 10px 5px 10px;
+	background-color: #f3f3f3;
+}
+
+.sparxpres-xprespay-content .sparxpres-xprespay-logo {
+	margin-left: auto;
+}
+
+.sparxpres-xprespay-logo svg {
+	height: 26px
+}
+
+.sparxpres-xprespay-news-logo {
+	padding-top: 1px;
+}
+
+.sparxpres-xprespay-news-logo svg {
+	width: 63px;
+	height: 24px;
+}
+
+.sparxpres-xprespay-text {
+	margin: 0 10px;
+	font-size: 14px;
+	font-weight: 700;
+	padding-top: 3px;
+	font-family: Tahoma, Arial, Verdana, sans-serif;
+
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+a.sparxpres-xprespay-link {
+	text-decoration: none !important;
+	color: unset !important;
+}
+
+a.sparxpres-xprespay-link:hover {
+	text-decoration: none !important;
+	color: unset !important;
+}
+
+.xprespay-pay-bg-color {
+	fill: var(--sparxpres-main-color);
 }
 
 /**
