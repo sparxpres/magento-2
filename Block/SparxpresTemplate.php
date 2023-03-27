@@ -246,7 +246,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
                 $webSaleVersion = '&websaleversion=magento2_v' . $version;
             }
 
-            $url = self::$SPARXPRES_BASE_URI . "/loaninfo?linkId=" . $lId . "&amount=" . $price . $webSaleVersion;
+            $url = self::$SPARXPRES_BASE_URI . "/loaninfo/?linkId=" . $lId . "&amount=" . $price . $webSaleVersion;
             $this->loanInformation = self::get_remote_json($url);
         }
         return $this->loanInformation;
@@ -265,7 +265,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
             return null;
         }
 
-        $url = self::$SPARXPRES_BASE_URI . "/loancalc?linkId=" . $linkId . "&period=" . $period . "&amount=" . $price;
+        $url = self::$SPARXPRES_BASE_URI . "/loancalc/?linkId=" . $linkId . "&period=" . $period . "&amount=" . $price;
         return self::get_remote_json($url);
     }
 
@@ -342,7 +342,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
                     .'{detail: {period: this.value, min: this.getAttribute(\'min\'), '
                     .'max: this.getAttribute(\'max\')}}));" '
                     .$style
-                    .'>';
+                    .' />';
 
                 $periodHtml .= '<div class="sparxpres-slider-steps">';
                 foreach ($loanPeriods as $loanPeriod) {
@@ -408,7 +408,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 4);    // Connection timeout
-        curl_setopt($curl, CURLOPT_TIMEOUT, 6);            // Total timeout incl. connection timeout
+        curl_setopt($curl, CURLOPT_TIMEOUT, 6);           // Total timeout incl. connection timeout
         $data = curl_exec($curl);
         $errno = curl_errno($curl);
         curl_close($curl);

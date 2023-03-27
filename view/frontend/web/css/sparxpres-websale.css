@@ -125,7 +125,7 @@
 }
 
 .sparxpres-xprespay-text {
-	margin: 0 10px;
+	margin: 0 10px 0 0;
 	font-size: 14px;
 	font-weight: 700;
 	padding-top: 3px;
@@ -270,6 +270,7 @@ input[type=range].sparxpres-slider {
 	padding:0 !important;
 	margin:7px 0 7px 0;
 	border:none;
+	overflow:unset;
 	-webkit-box-shadow:none;
 	-moz-box-shadow:none;
 	box-shadow:none;

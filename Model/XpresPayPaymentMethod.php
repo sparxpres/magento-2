@@ -9,21 +9,21 @@ class XpresPayPaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
     /**
      * @param \Magento\Payment\Model\InfoInterface $payment
      * @param $amount
-     * @return void
+     * @return $this
      */
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-
+        return $this;
     }
 
     /**
      * @param \Magento\Payment\Model\InfoInterface $payment
      * @param $amount
-     * @return void
+     * @return $this
      */
     public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-
+        return $this;
     }
 
 }

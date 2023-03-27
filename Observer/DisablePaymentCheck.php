@@ -25,26 +25,32 @@ class DisablePaymentCheck extends \Sparxpres\Websale\Block\SparxpresTemplate imp
     /**
      *
      * @param \Magento\Framework\Event\Observer $observer
-     * @return void
+     * @return $this
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $instance = $observer->getMethodInstance();
-        $result = $observer->getResult();
+        try {
+            $instance = $observer->getMethodInstance();
+            $result = $observer->getResult();
 
-        if ($instance->getCode() == 'sparxpres-payment') {
-            $this->price = $observer->getQuote()->getGrandTotal();
-            $result->setData(
-                'is_available',
-                !empty($this->getLinkId()) && $this->isActive() && $this->is_finance_enabled()
-            );
-        } elseif ($instance->getCode() == 'xprespay-payment') {
-            $this->price = $observer->getQuote()->getGrandTotal();
-            $result->setData(
-                'is_available',
-                !empty($this->getLinkId()) && $this->isActive() && $this->is_xprespay_enabled()
-            );
+            if ($instance->getCode() == 'sparxpres-payment') {
+                $this->price = $observer->getQuote()->getGrandTotal();
+                $result->setData(
+                    'is_available',
+                    !empty($this->getLinkId()) && $this->isActive() && $this->is_finance_enabled()
+                );
+            } elseif ($instance->getCode() == 'xprespay-payment') {
+                $this->price = $observer->getQuote()->getGrandTotal();
+                $result->setData(
+                    'is_available',
+                    !empty($this->getLinkId()) && $this->isActive() && $this->is_xprespay_enabled()
+                );
+            }
+        } catch (\Exception $e) {
+            // ignored
         }
+
+        return $this;
     }
 
     public function getPrice()
