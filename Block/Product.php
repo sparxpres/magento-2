@@ -9,14 +9,14 @@ class Product extends SparxpresTemplate
 
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\ObjectManagerInterface $objectManager,
+        \Magento\Framework\Registry $registry,
         \Magento\Catalog\Helper\Data $helper,
         \Magento\Framework\Module\ModuleListInterface $moduleList,
         array $data = []
     ) {
         $this->helper = $helper;
         $this->moduleList = $moduleList;
-        parent::__construct($context, $objectManager, $data);
+        parent::__construct($context, $registry, $data);
     }
 
     public function getModuleVersion()

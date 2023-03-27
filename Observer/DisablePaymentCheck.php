@@ -8,18 +8,18 @@ class DisablePaymentCheck extends \Sparxpres\Websale\Block\SparxpresTemplate imp
 
     /**
      * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \Magento\Framework\Registry $registry
      * @param \Psr\Log\LoggerInterface $logger
      * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\ObjectManagerInterface $objectManager,
+        \Magento\Framework\Registry $registry,
         \Psr\Log\LoggerInterface $logger,
         array $data = []
     ) {
         $this->logger = $logger;
-        parent::__construct($context, $objectManager, $data);
+        parent::__construct($context, $registry, $data);
     }
 
     /**

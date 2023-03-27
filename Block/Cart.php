@@ -3,18 +3,21 @@ namespace Sparxpres\Websale\Block;
 
 class Cart extends SparxpresTemplate
 {
+    private $checkoutSession;
     private $price;
     private $moduleList;
 
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\ObjectManagerInterface $objectManager,
+        \Magento\Checkout\Model\Session $session,
+        \Magento\Framework\Registry $registry,
         \Magento\Framework\Module\ModuleListInterface $moduleList,
         array $data = []
     )
     {
         $this->moduleList = $moduleList;
-        parent::__construct($context, $objectManager, $data);
+        $this->checkoutSession = $session;
+        parent::__construct($context, $registry, $data);
     }
 
     public function getModuleVersion()
@@ -26,8 +29,7 @@ class Cart extends SparxpresTemplate
     public function getPrice()
     {
         if (is_null($this->price)) {
-            $cart = $this->objectManager->get('\Magento\Checkout\Model\Cart');
-            $this->price = ceil($cart->getQuote()->getGrandTotal());
+            $this->price = ceil($this->checkoutSession->getQuote()->getGrandTotal());
         }
         return $this->price;
     }

@@ -27,4 +27,24 @@ if ($block->isValid()) {
 }
 </script>
 ';
+
+    echo '
+<script type="text/javascript">
+  require(["jquery"],function(jQuery){
+    jQuery(document).on("click", ".swatch-option", function(e) {
+      setTimeout(function () {
+        const price = jQuery("#product-price-'.$block->getProductId().' > .price").text();
+        if (price) {
+            const priceMatch = /(\d{1,3}(\ |\.|\,)?\d{3})(\.|\,)?(\d{0,2})/;
+            const matches = price.match(priceMatch);
+            if (matches) {
+                const _price = Math.ceil(Number(matches[1].replace(/[ ,.]/g, "") + "." + matches[4]));
+                window.dispatchEvent(new CustomEvent("sparxpresRuntimeRecalculate", {detail: {price: _price}}));
+            }
+        }
+      }, 200);
+    });
+  });
+</script>
+';
 }

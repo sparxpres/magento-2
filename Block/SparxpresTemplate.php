@@ -5,22 +5,47 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
 {
     private static $SPARXPRES_BASE_URI = 'https://sparxpres.dk/app';
 
-    protected $objectManager;
+    protected $registry;
+    private $product;
     private $linkId;
     private $loanInformation;
 
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\ObjectManagerInterface $objectManager,
+        \Magento\Framework\Registry $registry,
         array $data = []
     ) {
-        $this->objectManager = $objectManager;
+        $this->registry = $registry;
         parent::__construct($context, $data);
     }
 
     abstract public function getPrice();
 
     abstract public function getModuleVersion();
+
+    /**
+     * @return Product
+     */
+    private function getProduct()
+    {
+        if (is_null($this->product)) {
+            $this->product = $this->registry->registry('product');
+
+            if (!$this->product->getId()) {
+                throw new LocalizedException(__('Failed to initialize product'));
+            }
+        }
+
+        return $this->product;
+    }
+
+    /**
+     * @return product id
+     */
+    public function getProductId()
+    {
+        return $this->getProduct()->getId();
+    }
 
     /**
      * @return bool
