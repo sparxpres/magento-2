@@ -30,16 +30,16 @@ class DisablePaymentCheck extends \Sparxpres\Websale\Block\SparxpresTemplate imp
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         try {
-            $instance = $observer->getMethodInstance();
+            $paymentMethod = $observer->getMethodInstance()->getCode();
             $result = $observer->getResult();
 
-            if ($instance->getCode() == 'sparxpres-payment') {
+            if ($paymentMethod == 'sparxpres-payment') {
                 $this->price = $observer->getQuote()->getGrandTotal();
                 $result->setData(
                     'is_available',
                     !empty($this->getLinkId()) && $this->isActive() && $this->is_finance_enabled()
                 );
-            } elseif ($instance->getCode() == 'xprespay-payment') {
+            } elseif ($paymentMethod == 'xprespay-payment') {
                 $this->price = $observer->getQuote()->getGrandTotal();
                 $result->setData(
                     'is_available',

@@ -5,13 +5,12 @@
 			<sparxpres-payment>
 				<active>1</active>
 				<model>Sparxpres\Websale\Model\SparxpresPaymentMethod</model>
+				<order_status>pending</order_status>
 				<title>Sparxpres delbetaling</title>
-				<payment_action>authorize</payment_action>
-				<order_status>pending_payment</order_status>
 				<group>offline</group>
 				<currency>DKK</currency>
 				<min_order_total>2000.0</min_order_total>
-				<can_initialize>0</can_initialize>
+				<!--can_initialize>0</can_initialize>
 				<can_use_checkout>1</can_use_checkout>
 				<can_authorize>1</can_authorize>
 				<can_capture>0</can_capture>
@@ -21,19 +20,18 @@
 				<can_void>1</can_void>
 				<can_cancel>1</can_cancel>
 				<can_use_internal>0</can_use_internal>
-				<is_gateway>1</is_gateway>
+				<is_gateway>1</is_gateway-->
 				<sort_order>100</sort_order>
 			</sparxpres-payment>
 			<xprespay-payment>
 				<active>1</active>
 				<model>Sparxpres\Websale\Model\XpresPayPaymentMethod</model>
+				<order_status>pending</order_status>
 				<title>XpresPay</title>
-				<payment_action>authorize</payment_action>
-				<order_status>pending_payment</order_status>
 				<group>offline</group>
 				<currency>DKK</currency>
 				<min_order_total>1.0</min_order_total>
-				<can_initialize>0</can_initialize>
+				<!--can_initialize>0</can_initialize>
 				<can_use_checkout>1</can_use_checkout>
 				<can_authorize>1</can_authorize>
 				<can_capture>0</can_capture>
@@ -43,7 +41,7 @@
 				<can_void>1</can_void>
 				<can_cancel>1</can_cancel>
 				<can_use_internal>0</can_use_internal>
-				<is_gateway>1</is_gateway>
+				<is_gateway>1</is_gateway-->
 				<sort_order>110</sort_order>
 			</xprespay-payment>
 		</payment>
