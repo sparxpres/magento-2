@@ -1,6 +1,8 @@
 define(['jquery','jquery/validate'], function($){
 	"use strict";
 
+	let sparxpresProductId = false;
+
 	$(document).ready(function() {
 		$.validator.defaults.ignore = ":hidden,input.sparxpres-slider,.no-validation";
 
@@ -247,10 +249,38 @@ define(['jquery','jquery/validate'], function($){
 						rangeStepsElem.appendChild(divStep);
 					});
 				}
+			},
+
+			addProductPriceChangeEventListener: function(_productId = 0) {
+				if (_productId) {
+					$(document).on("click", ".swatch-option", function (e) {
+						setTimeout(function () {
+							const price = $("#product-price-" + _productId + " > .price").text();
+							if (price) {
+								const priceMatch = /(\d{1,3}(\ |\.|\,)?\d{3})(\.|\,)?(\d{0,2})/;
+								const matches = price.match(priceMatch);
+								if (matches) {
+									const _price = Math.ceil(Number(matches[1].replace(/[ ,.]/g, "") + "." + matches[4]));
+									window.dispatchEvent(new CustomEvent("sparxpresRuntimeRecalculate", {detail: {price: _price}}));
+								}
+							}
+						}, 200);
+					});
+				}
 			}
 		};
 
 		spxLoanCalcEngine.init();
+
+		setTimeout(function() {
+			if (sparxpresProductId) {
+				spxLoanCalcEngine.addProductPriceChangeEventListener(sparxpresProductId);
+			}
+		}, 500);
 	});
+
+	return function (config, $element) {
+		sparxpresProductId = config.productId || false;
+	};
 
 });

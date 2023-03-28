@@ -8,7 +8,7 @@ if ($block->isValid()) {
     $version = $block->getModuleVersion();
     $style = $block->getWebSaleElementStyle();
 
-    echo '<div
+    echo '<div data-mage-init=\'{"Sparxpres_Websale/js/sparxpres-websale": {}}\'
  id="sparxpres_web_sale"
  class="sparxpres_cart"
  data-link-id="'.$linkId.'"
@@ -18,13 +18,4 @@ if ($block->isValid()) {
  data-version="'.$version.'"
  '.$style.'>' . $content . '</div>';
 
-    echo '
-<script type="text/x-magento-init">
-{
-  "#sparxpres_web_sale": {
-      "Sparxpres_Websale/js/sparxpres-websale": {}
-  }
-}
-</script>
-';
 }
