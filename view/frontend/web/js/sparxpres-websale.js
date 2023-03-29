@@ -257,10 +257,10 @@ define(['jquery','jquery/validate'], function($){
 						setTimeout(function () {
 							const price = $("#product-price-" + _productId + " > .price").text();
 							if (price) {
-								const priceMatch = /(\d{1,3}([ .,])?\d{3})([.,])?(\d{0,2})/;
+								const priceMatch = /(\d{1,3}[ .,]?\d{3})[.,]?(\d{0,2})/;
 								const matches = price.match(priceMatch);
 								if (matches) {
-									const _price = Math.ceil(Number(matches[1].replace(/[ ,.]/g, "") + "." + matches[4]));
+									const _price = Math.ceil(Number(matches[1].replace(/[ ,.]/g, "") + "." + matches[2]));
 									window.dispatchEvent(new CustomEvent("sparxpresRuntimeRecalculate", {detail: {price: _price}}));
 								}
 							}
