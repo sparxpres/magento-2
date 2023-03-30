@@ -239,17 +239,21 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
         $loanPeriods = $this->getLoanPeriods();
 
         $wrapperType = $this->getWrapperType($isProductPage);
-        $viewType = $this->getViewType(count($loanPeriods));
-        $html = file_get_contents(dirname(__FILE__) . '/static_html/sparxpres-'.$wrapperType.'.html');
-        $html = self::get_html_with_loan_calculations(
-            $lId,
-            $this->getDefaultPeriod(),
-            $loanPeriods,
-            $viewType,
-            $html
-        );
+        if ($wrapperType != 'none') {
+            $viewType = $this->getViewType(count($loanPeriods));
+            $html = file_get_contents(dirname(__FILE__) . '/static_html/sparxpres-' . $wrapperType . '.html');
+            $html = self::get_html_with_loan_calculations(
+                $lId,
+                $this->getDefaultPeriod(),
+                $loanPeriods,
+                $viewType,
+                $html
+            );
 
-        return empty($html) ? '' : $html;
+            return empty($html) ? '' : $html;
+        }
+
+        return '';
     }
 
     /**

@@ -1,12 +1,9 @@
 <?xml version="1.0"?>
-<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+		<css src="Sparxpres_Websale::css/sparxpres-websale.css"/>
+	</head>
 	<body>
-		<referenceBlock name="head.additional">
-			<block template="Sparxpres_Websale::head.phtml"
-				   class="Sparxpres\Websale\Block\Head"
-				   name="websale_block_head" />
-		</referenceBlock>
-
 		<!-- Simple Products -->
 		<referenceBlock name="product.info.addtocart">
 			<block template="Sparxpres_Websale::product/view/addtocart.phtml"
