@@ -38,7 +38,7 @@
 				</field>
 			</group>
 
-			<group id="sparxpres-payment" translate="label" type="text" sortOrder="501" showInDefault="1" showInWebsite="1" showInStore="1">
+			<group id="sparxpres_payment" translate="label" type="text" sortOrder="501" showInDefault="1" showInWebsite="1" showInStore="1">
 				<label>Sparxpres delbetaling</label>
 				<field id="sort_order" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
 					<label>Delbetaling sortering</label>
@@ -50,7 +50,7 @@
 				</field>
 			</group>
 
-			<group id="xprespay-payment" translate="label" type="text" sortOrder="502" showInDefault="1" showInWebsite="1" showInStore="1">
+			<group id="xprespay_payment" translate="label" type="text" sortOrder="502" showInDefault="1" showInWebsite="1" showInStore="1">
 				<label>Sparxpres XpresPay</label>
 				<field id="sort_order" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
 					<label>XpresPay sortering</label>

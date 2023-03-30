@@ -21,3 +21,6 @@
 - XpresPay appearances updated 
 - Order creation status is now pending
 - Bugfixes
+
+## [1.0.16] - 2022-08-30
+- Bugfix

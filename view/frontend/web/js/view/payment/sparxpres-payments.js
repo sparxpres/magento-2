@@ -12,11 +12,11 @@ define(
 		'use strict';
 		rendererList.push(
 			{
-				type: 'sparxpres-payment',
+				type: 'sparxpres_payment',
 				component: 'Sparxpres_Websale/js/view/payment/method-renderer/sparxpres-payment-method'
 			},
 			{
-				type: 'xprespay-payment',
+				type: 'xprespay_payment',
 				component: 'Sparxpres_Websale/js/view/payment/method-renderer/xprespay-payment-method'
 			}
 		);

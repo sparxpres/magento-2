@@ -5,7 +5,7 @@ use Magento\Sales\Model\Order;
 
 class SparxpresPaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
 {
-    protected $_code = 'sparxpres-payment';
+    protected $_code = 'sparxpres_payment';
     protected $_isOffline = true;
 
     /**

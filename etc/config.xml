@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
 	<default>
 		<payment>
-			<sparxpres-payment>
+			<sparxpres_payment>
 				<active>1</active>
 				<model>Sparxpres\Websale\Model\SparxpresPaymentMethod</model>
 				<order_status>pending</order_status>
@@ -22,8 +22,8 @@
 				<can_use_internal>0</can_use_internal>
 				<is_gateway>1</is_gateway-->
 				<sort_order>100</sort_order>
-			</sparxpres-payment>
-			<xprespay-payment>
+			</sparxpres_payment>
+			<xprespay_payment>
 				<active>1</active>
 				<model>Sparxpres\Websale\Model\XpresPayPaymentMethod</model>
 				<order_status>pending</order_status>
@@ -43,7 +43,7 @@
 				<can_use_internal>0</can_use_internal>
 				<is_gateway>1</is_gateway-->
 				<sort_order>110</sort_order>
-			</xprespay-payment>
+			</xprespay_payment>
 		</payment>
 	</default>
 </config>

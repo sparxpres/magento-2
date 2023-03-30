@@ -3,7 +3,7 @@ namespace Sparxpres\Websale\Model;
 
 class XpresPayPaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
 {
-    protected $_code = 'xprespay-payment';
+    protected $_code = 'xprespay_payment';
     protected $_isOffline = true;
 
     /**

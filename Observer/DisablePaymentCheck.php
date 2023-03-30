@@ -33,13 +33,13 @@ class DisablePaymentCheck extends \Sparxpres\Websale\Block\SparxpresTemplate imp
             $paymentMethod = $observer->getMethodInstance()->getCode();
             $result = $observer->getResult();
 
-            if ($paymentMethod == 'sparxpres-payment') {
+            if ($paymentMethod == 'sparxpres_payment') {
                 $this->price = $observer->getQuote()->getGrandTotal();
                 $result->setData(
                     'is_available',
                     !empty($this->getLinkId()) && $this->isActive() && $this->is_finance_enabled()
                 );
-            } elseif ($paymentMethod == 'xprespay-payment') {
+            } elseif ($paymentMethod == 'xprespay_payment') {
                 $this->price = $observer->getQuote()->getGrandTotal();
                 $result->setData(
                     'is_available',
