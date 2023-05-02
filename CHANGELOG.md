@@ -22,5 +22,8 @@
 - Order creation status is now pending
 - Bugfixes
 
-## [1.0.16] - 2022-08-30
+## [1.0.16] - 2023-04-01
 - Bugfix
+
+## [1.0.17] - 2023-05-02
+- Callback reserved state changed to processing
