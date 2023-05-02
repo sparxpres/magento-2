@@ -128,7 +128,7 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
                     case "RESERVED":
                         $order->addCommentToStatusHistory(
                             "Lånet er klar til frigivelse hos Sparxpres.",
-                            Order::STATE_PAYMENT_REVIEW,
+                            Order::STATE_PROCESSING,
                             false
                         );
                         $order->save();
