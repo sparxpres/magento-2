@@ -4,7 +4,10 @@ define(['jquery','jquery/validate'], function($){
 	let sparxpresProductId = false;
 
 	$(document).ready(function() {
-		$.validator.defaults.ignore = ":hidden,input.sparxpres-slider,.no-validation";
+		//$.validator.defaults.ignore = ":hidden,input.sparxpres-slider,select.sparxpres-select,.no-validation";
+		//$.validator.setDefaults({ignore: [":hidden", "input.sparxpres-slider", "select.sparxpres-select"]});
+		//$.validator.setDefaults({ignore: ":hidden, input.sparxpres-slider, select.sparxpres-select, .no-validation"});
+		//console.debug($.validator.defaults.ignore);
 
 		const spxLoanCalcEngine = {
 			debug: false,
@@ -251,20 +254,28 @@ define(['jquery','jquery/validate'], function($){
 				}
 			},
 
+			_fetchPriceAndDispatchEvent(_productId = 0) {
+				setTimeout(function () {
+					const price = $("#product-price-" + _productId + " > .price").text();
+					if (price) {
+						const priceMatch = /(\d{1,3}[ .,]?\d{3})[.,]?(\d{0,2})/;
+						const matches = price.match(priceMatch);
+						if (matches) {
+							const _price = Math.ceil(Number(matches[1].replace(/[ ,.]/g, "") + "." + matches[2]));
+							window.dispatchEvent(new CustomEvent("sparxpresRuntimeRecalculate", {detail: {price: _price}}));
+						}
+					}
+				}, 200);
+			},
+
 			addProductPriceChangeEventListener: function(_productId = 0) {
 				if (_productId) {
 					$(document).on("click", ".swatch-option", function (e) {
-						setTimeout(function () {
-							const price = $("#product-price-" + _productId + " > .price").text();
-							if (price) {
-								const priceMatch = /(\d{1,3}[ .,]?\d{3})[.,]?(\d{0,2})/;
-								const matches = price.match(priceMatch);
-								if (matches) {
-									const _price = Math.ceil(Number(matches[1].replace(/[ ,.]/g, "") + "." + matches[2]));
-									window.dispatchEvent(new CustomEvent("sparxpresRuntimeRecalculate", {detail: {price: _price}}));
-								}
-							}
-						}, 200);
+						spxLoanCalcEngine._fetchPriceAndDispatchEvent(_productId);
+					});
+
+					$(document).on("change", "#product_addtocart_form > input[type=hidden][name=selected_configurable_option]", function(e) {
+						spxLoanCalcEngine._fetchPriceAndDispatchEvent(_productId);
 					});
 				}
 			}

@@ -27,3 +27,8 @@
 
 ## [1.0.17] - 2023-05-02
 - Callback reserved state changed to processing
+
+## [1.0.18] - 2023-05-09
+- Changed to use app.sparxpres.dk
+- JS listen for selected_configurable_option change
+- Validate attribute added to slider

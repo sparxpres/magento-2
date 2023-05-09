@@ -3,7 +3,7 @@ namespace Sparxpres\Websale\Block;
 
 abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Template
 {
-    private static $SPARXPRES_BASE_URI = 'https://sparxpres.dk/app';
+    private static $SPARXPRES_BASE_URI = 'https://app.sparxpres.dk/spx/rest/calculator';
 
     protected $registry;
     private $product;
@@ -275,7 +275,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
                 $webSaleVersion = '&websaleversion=magento2_v' . $version;
             }
 
-            $url = self::$SPARXPRES_BASE_URI . "/loaninfo/?linkId=" . $lId . "&amount=" . $price . $webSaleVersion;
+            $url = self::$SPARXPRES_BASE_URI . "/loaninfo?linkId=" . $lId . "&amount=" . $price . $webSaleVersion;
             $this->loanInformation = self::get_remote_json($url);
         }
         return $this->loanInformation;
@@ -294,7 +294,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
             return null;
         }
 
-        $url = self::$SPARXPRES_BASE_URI . "/loancalc/?linkId=" . $linkId . "&period=" . $period . "&amount=" . $price;
+        $url = self::$SPARXPRES_BASE_URI . "/loancalc?linkId=" . $linkId . "&period=" . $period . "&amount=" . $price;
         return self::get_remote_json($url);
     }
 
@@ -358,18 +358,18 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
                     $pct = ($period - $minPeriod) / ($maxPeriod - $minPeriod) * 100;
                     $style = "style=\"--sparxpres-slider-pct:" . round($pct, 2) . "%;\"";
                 }
-                $periodHtml = '<input type="range" class="sparxpres-slider" prefix="mdr." min="'
-                    .$minPeriod
-                    .'" max="'.$maxPeriod
-                    .'" step="'.$step
-                    .'" value="'.$period
-                    .'" onchange="window.dispatchEvent('
-                    .'new CustomEvent(\'sparxpresPeriodChange\', '
-                    .'{detail: {period: this.value}}));" '
+
+                $periodHtml = '<input type="range" class="sparxpres-slider" prefix="mdr." '
+                    .'min="'.$minPeriod.'" '
+                    .'max="'.$maxPeriod.'" '
+                    .'step="'.$step.'" '
+                    .'value="'.$period.'" '
+                    .'data-validate="{rules: {range: [1,200]}}" '
+                    .'onchange="window.dispatchEvent('
+                    .  'new CustomEvent(\'sparxpresPeriodChange\', {detail: {period: this.value}}));" '
                     .'oninput="window.dispatchEvent('
-                    .'new CustomEvent(\'sparxpresPeriodInput\', '
-                    .'{detail: {period: this.value, min: this.getAttribute(\'min\'), '
-                    .'max: this.getAttribute(\'max\')}}));" '
+                    .  'new CustomEvent(\'sparxpresPeriodInput\', {detail: {period: this.value, '
+                    .    'min: this.getAttribute(\'min\'), max: this.getAttribute(\'max\')}}));" '
                     .$style
                     .' />';
 
