@@ -1,8 +1,6 @@
 <?php
 namespace Sparxpres\Websale\Model\Api;
 
-use Magento\Sales\Model\Order;
-
 class Callback implements \Sparxpres\Websale\Api\CallbackInterface
 {
     protected $request;
@@ -56,7 +54,7 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
 
             $order = $this->orderRepository->get($transactionId);
             if (empty($order)) {
-                return new WP_Error('error', 'Invalid order');
+                throw new \InvalidArgumentException('Invalid order');
             }
 
             if ($status === 'NEW'
@@ -84,10 +82,10 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
             }
 
             $originalStatus = $order->getStatus();
-            if ($originalStatus === Order::STATE_CANCELED
-                || $originalStatus === Order::STATUS_FRAUD
-                || $originalStatus === Order::STATE_CLOSED
-                || $originalStatus === Order::STATE_COMPLETE
+            if ($originalStatus === \Magento\Sales\Model\Order::STATE_CANCELED
+                || $originalStatus === \Magento\Sales\Model\Order::STATUS_FRAUD
+                || $originalStatus === \Magento\Sales\Model\Order::STATE_CLOSED
+                || $originalStatus === \Magento\Sales\Model\Order::STATE_COMPLETE
             ) {
                 $order->addCommentToStatusHistory(
                     "Sparxpres sendte callback (".$status."), men ordrens status var "
@@ -100,53 +98,36 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
             } else {
                 switch ($status) {
                     case "NEW":
-                        $order->addCommentToStatusHistory(
-                            "Sparxpres har modtaget låneansøgningen.",
-                            Order::STATE_PENDING_PAYMENT,
-                            false
-                        );
+                        $order->setStatus(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
+                        $order->addStatusHistoryComment('Sparxpres har modtaget låneansøgningen.');
                         $order->save();
                         break;
                     case "WAITING_FOR_SIGNATURE":
-                        $order->addCommentToStatusHistory(
-                            "Sparxpres afventer kundens underskrift.",
-                            Order::STATE_PENDING_PAYMENT,
-                            false
-                        );
+                        $order->setStatus(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
+                        $order->addStatusHistoryComment('Sparxpres afventer kundens underskrift.');
                         $order->save();
                         break;
                     case "REGRETTED":
                     case "CANCELED":
                     case "CANCELLED":
-                        $order->addCommentToStatusHistory(
-                            "Sparxpres har annulleret lånet.",
-                            Order::STATE_CANCELED,
-                            false
-                        );
+                        $order->setStatus(\Magento\Sales\Model\Order::STATE_CANCELED);
+                        $order->addStatusHistoryComment('Sparxpres har annulleret lånet.');
                         $order->save();
                         break;
                     case "RESERVED":
-                        $order->addCommentToStatusHistory(
-                            "Lånet er klar til frigivelse hos Sparxpres.",
-                            Order::STATE_PROCESSING,
-                            false
-                        );
+                        $order->setStatus(\Magento\Sales\Model\Order::STATE_PROCESSING);
+                        $order->addStatusHistoryComment('Lånet er klar til frigivelse hos Sparxpres.');
                         $order->save();
                         break;
                     case "CAPTURED":
-                        $order->addCommentToStatusHistory(
-                            "Lånet er sat til udbetaling hos Sparxpres.",
-                            Order::STATE_PROCESSING,
-                            false
-                        );
+                        $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
+                        $order->setStatus(\Magento\Sales\Model\Order::STATE_PROCESSING);
+                        $order->addStatusHistoryComment('Lånet er sat til udbetaling hos Sparxpres.');
                         $order->save();
                         break;
                     case "DECLINE":
-                        $order->addCommentToStatusHistory(
-                            "Sparxpres har givet afslag på låneansøgningen.",
-                            Order::STATE_CANCELED,
-                            false
-                        );
+                        $order->setStatus(\Magento\Sales\Model\Order::STATE_CANCELED);
+                        $order->addStatusHistoryComment('Sparxpres har givet afslag på låneansøgningen.');
                         $order->save();
                         break;
                     default:
@@ -156,7 +137,10 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
             }
             return $resp;
         } catch (\Exception $e) {
-            throw new \Magento\Framework\Exception\ValidatorException(__($e->getMessage()));
+            $resp = $this->responseFactory->create();
+            $resp->setSuccess(false);
+            $resp->setMessage($e->getMessage());
+            return $resp;
         }
     }
 

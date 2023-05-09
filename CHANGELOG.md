@@ -32,3 +32,4 @@
 - Changed to use app.sparxpres.dk
 - JS listen for selected_configurable_option change
 - Validate attribute added to slider
+- CAPTURE callback update to set status AND state to STATE_PROCESSING
