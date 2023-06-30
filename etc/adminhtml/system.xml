@@ -2,50 +2,50 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
 	<system>
 		<section id="payment">
-			<group id="sparxpres_gateway" translate="label" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
-				<label>Sparxpres konfiguration</label>
+			<group id="sparxpres_gateway" translate="label comment" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>Sparxpres configuration</label>
 				<field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
 					<label>Enabled</label>
 					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 				</field>
 				<field id="link_id" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="1">
 					<label>Sparxpres link id</label>
-					<comment>Indsæt det link id du har fået af Sparxpres.</comment>
+					<comment>Insert the link id you got from Sparxpres</comment>
 					<validate>required-entry no-whitespace</validate>
 				</field>
 				<field id="display_view_type" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="1">
-					<label>Sparxpres view type</label>
-					<comment>Vælg om løbetiderne skal vises som en slider eller som en dropdown boks.</comment>
+					<label>Periode display type</label>
+					<comment>Choose how the periods should be displayed</comment>
 					<source_model>Sparxpres\Websale\Model\Config\ViewTypes</source_model>
 				</field>
 				<field id="display_wrapper_type_product" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="1">
-					<label>Produkt side visningstype</label>
-					<comment>Vælg om delbetaling skal vises indlejret på siden, eller som en knap der åbner et modal vindue.</comment>
+					<label>Product page display</label>
+					<comment>Choose how the calculation is displayed</comment>
 					<source_model>Sparxpres\Websale\Model\Config\WrapperTypes</source_model>
 				</field>
 				<field id="display_wrapper_type_cart" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="1">
-					<label>Kurv side visningstype</label>
-					<comment>Vælg om delbetaling skal vises indlejret på siden, eller som en knap der åbner et modal vindue.</comment>
+					<label>Cart page display</label>
+					<comment>Choose how the calculation is displayed</comment>
 					<source_model>Sparxpres\Websale\Model\Config\WrapperTypes</source_model>
 				</field>
 				<field id="main_color" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="1">
-					<label>Ændre Sparxpres' røde farve?</label>
-					<comment>Hvis du vil ændre den røde farve som Sparxpres bruger, kan du indtaste en hex kode her (husk at starte med #, fx. "#222222").</comment>
+					<label>Change default color?</label>
+					<comment>Change the default red color, by inserting a hex color code (must start with #, fx. '#222222')</comment>
 				</field>
 				<field id="slider_bg_color" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="1">
-					<label>Ændre Sparxpres' slider baggrundsfarve?</label>
-					<comment>Hvis du vil ændre den grå slider farve som Sparxpres bruger, kan du indtaste en hex kode her (husk at starte med #, fx. "#666666").</comment>
+					<label>Change slider background color?</label>
+					<comment>Change the default grey slider background color, by inserting a hex color code (must start with #, fx. '#666666')</comment>
 				</field>
 			</group>
 
 			<group id="sparxpres_payment" translate="label" type="text" sortOrder="501" showInDefault="1" showInWebsite="1" showInStore="1">
-				<label>Sparxpres delbetaling</label>
+				<label>Sparxpres part payment</label>
 				<field id="sort_order" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-					<label>Delbetaling sortering</label>
+					<label>Sort order</label>
 					<frontend_class>validate-number</frontend_class>
 				</field>
 				<field id="order_status" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
-					<label>Ny ordre status</label>
+					<label>New order status</label>
 					<source_model>Magento\Sales\Model\Config\Source\Order\Status\NewStatus</source_model>
 				</field>
 			</group>
@@ -53,11 +53,11 @@
 			<group id="xprespay_payment" translate="label" type="text" sortOrder="502" showInDefault="1" showInWebsite="1" showInStore="1">
 				<label>Sparxpres XpresPay</label>
 				<field id="sort_order" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-					<label>XpresPay sortering</label>
+					<label>Sort order</label>
 					<frontend_class>validate-number</frontend_class>
 				</field>
 				<field id="order_status" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
-					<label>Ny ordre status</label>
+					<label>New order status</label>
 					<source_model>Magento\Sales\Model\Config\Source\Order\Status\NewStatus</source_model>
 				</field>
 			</group>

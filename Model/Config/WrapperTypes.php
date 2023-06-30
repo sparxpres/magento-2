@@ -5,9 +5,9 @@ class WrapperTypes implements \Magento\Framework\Option\ArrayInterface {
 
 	public function toOptionArray() {
 		return [
-			['value' => 'simple', 'label' => __('Vis låneberegneren direkte på siden')],
-			['value' => 'modal', 'label' => __('Vis låneberegneren i et modal vindue (med knap på siden)')],
-            ['value' => 'none', 'label' => __('Vis ikke låneberegneren')],
+			['value' => 'simple', 'label' => __('Show the loan calculation integrated on the page')],
+			['value' => 'modal', 'label' => __('Show the loan calculation in a popup window (with a button on the page)')],
+            ['value' => 'none', 'label' => __('Do not show the loan calculator')],
 		];
 	}
 
