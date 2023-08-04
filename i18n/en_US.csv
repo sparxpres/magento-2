@@ -4,7 +4,7 @@ Dropdown,Dropdown
 "Plain (only one period)","Plain (only one period)"
 "Show the loan calculation integrated on the page","Show the loan calculation on the page"
 "Show the loan calculation in a popup window (with a button on the page)","Show the loan calculation in a modal window (with a button on the page)"
-"Don't show the loan calculator","Do not show the loan calculator"
+"Do not show the loan calculator","Do not show the loan calculator"
 "Place Order","Place Order"
 "Sparxpres configuration","Sparxpres configuration"
 Enabled,Enabled
@@ -24,3 +24,5 @@ Enabled,Enabled
 "New order status","New order status"
 "Sparxpres XpresPay","Sparxpres XpresPay"
 "Please enter a valid hex color code (# followed by 3 or 6 hexadecimal digits)","Please enter a valid hex color code (# followed by 3 or 6 hexadecimal digits)"
+"Title", "Title"
+"Instructions", "Instructions"
