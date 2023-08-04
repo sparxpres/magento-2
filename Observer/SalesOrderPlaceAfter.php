@@ -1,4 +1,5 @@
 <?php
+
 namespace Sparxpres\Websale\Observer;
 
 use Magento\Sales\Model\Order;
@@ -17,7 +18,8 @@ class SalesOrderPlaceAfter implements \Magento\Framework\Event\ObserverInterface
             $order = $observer->getEvent()->getOrder();
             if ($order instanceof \Magento\Framework\Model\AbstractModel) {
                 $paymentMethod = $order->getPayment()->getMethodInstance()->getCode();
-                if ($paymentMethod == 'sparxpres_payment' || $paymentMethod == 'xprespay_payment') {
+                if ($paymentMethod == \Sparxpres\Websale\Model\SparxpresPaymentMethod::PAYMENT_METHOD_CODE ||
+                    $paymentMethod == \Sparxpres\Websale\Model\XpresPayPaymentMethod::PAYMENT_METHOD_CODE) {
                     $order->setState(Order::STATE_PENDING_PAYMENT)->setStatus(Order::STATE_PENDING_PAYMENT);
                     $order->save();
                 }

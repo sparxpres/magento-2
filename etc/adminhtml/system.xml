@@ -11,7 +11,7 @@
 				<field id="link_id" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="1">
 					<label>Sparxpres link id</label>
 					<comment>Insert the link id you got from Sparxpres</comment>
-					<validate>required-entry no-whitespace</validate>
+					<validate>required-entry no-whitespace validate-length minimum-length-36 maximum-length-36</validate>
 				</field>
 				<field id="display_view_type" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="1">
 					<label>Periode display type</label>
@@ -29,22 +29,35 @@
 					<source_model>Sparxpres\Websale\Model\Config\WrapperTypes</source_model>
 				</field>
 				<field id="main_color" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="1">
-					<label>Change default color?</label>
-					<comment>Change the default red color, by inserting a hex color code (must start with #, fx. '#222222')</comment>
+					<label>Main color</label>
+					<comment>Insert a valid hex color code to change the default red color</comment>
+					<validate>no-whitespace validate-hex-color-code</validate>
 				</field>
 				<field id="slider_bg_color" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="1">
-					<label>Change slider background color?</label>
-					<comment>Change the default grey slider background color, by inserting a hex color code (must start with #, fx. '#666666')</comment>
+					<label>Slider background color</label>
+					<comment>Insert a valid hex color code to change slider range background color</comment>
+					<validate>no-whitespace validate-hex-color-code</validate>
 				</field>
 			</group>
 
 			<group id="sparxpres_payment" translate="label" type="text" sortOrder="501" showInDefault="1" showInWebsite="1" showInStore="1">
 				<label>Sparxpres part payment</label>
-				<field id="sort_order" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+				<field id="active" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+					<label>Enabled</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="1">
+					<label>Title</label>
+					<validate>required-entry</validate>
+				</field>
+				<field id="instructions" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="1">
+					<label>Instructions</label>
+				</field>
+				<field id="sort_order" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
 					<label>Sort order</label>
 					<frontend_class>validate-number</frontend_class>
 				</field>
-				<field id="order_status" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+				<field id="order_status" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
 					<label>New order status</label>
 					<source_model>Magento\Sales\Model\Config\Source\Order\Status\NewStatus</source_model>
 				</field>
@@ -52,11 +65,22 @@
 
 			<group id="xprespay_payment" translate="label" type="text" sortOrder="502" showInDefault="1" showInWebsite="1" showInStore="1">
 				<label>Sparxpres XpresPay</label>
-				<field id="sort_order" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+				<field id="active" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+					<label>Enabled</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="1">
+					<label>Title</label>
+					<validate>required-entry</validate>
+				</field>
+				<field id="instructions" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="1">
+					<label>Instructions</label>
+				</field>
+				<field id="sort_order" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
 					<label>Sort order</label>
 					<frontend_class>validate-number</frontend_class>
 				</field>
-				<field id="order_status" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+				<field id="order_status" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
 					<label>New order status</label>
 					<source_model>Magento\Sales\Model\Config\Source\Order\Status\NewStatus</source_model>
 				</field>

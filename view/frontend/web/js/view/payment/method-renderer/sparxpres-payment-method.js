@@ -18,6 +18,10 @@ define(
 				template: 'Sparxpres_Websale/payment/sparxpres-payment'
 			},
 
+			getInstructions: function () {
+				return window.checkoutConfig.payment.instructions[this.item.method];
+			},
+
 			afterPlaceOrder: function () {
 				redirectOnSuccess.redirectUrl = urlBuilder.build('/sparxpres/launchapplication');
 				this.redirectAfterPlaceOrder = true;

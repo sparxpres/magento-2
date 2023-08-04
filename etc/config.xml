@@ -7,6 +7,8 @@
 				<model>Sparxpres\Websale\Model\SparxpresPaymentMethod</model>
 				<order_status>pending</order_status>
 				<title>Sparxpres delbetaling</title>
+				<instructions>Din ordre afsendes først efter godkendelse hos Sparxpres.
+Følg anvisningerne på næste side.</instructions>
 				<group>offline</group>
 				<currency>DKK</currency>
 				<min_order_total>2000.0</min_order_total>
@@ -28,6 +30,8 @@
 				<model>Sparxpres\Websale\Model\XpresPayPaymentMethod</model>
 				<order_status>pending</order_status>
 				<title>XpresPay</title>
+				<instructions>Betal med din XpresPay kredit.
+Følg anvisningerne på næste side.</instructions>
 				<group>offline</group>
 				<currency>DKK</currency>
 				<min_order_total>1.0</min_order_total>

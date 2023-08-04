@@ -5,7 +5,8 @@ use Magento\Sales\Model\Order;
 
 class SparxpresPaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
 {
-    protected $_code = 'sparxpres_payment';
+    const PAYMENT_METHOD_CODE = 'sparxpres_payment';
+    protected $_code = self::PAYMENT_METHOD_CODE;
     protected $_isOffline = true;
 
     /**
@@ -26,6 +27,17 @@ class SparxpresPaymentMethod extends \Magento\Payment\Model\Method\AbstractMetho
     public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         return $this;
+    }
+
+    /**
+     * Get instructions text from config
+     *
+     * @return string
+     */
+    public function getInstructions()
+    {
+        $instructions = $this->getConfigData('instructions');
+        return $instructions !== null ? trim($instructions) : '';
     }
 
 }

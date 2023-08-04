@@ -93,7 +93,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
             $this->_storeManager->getStore()->getId()
         );
 
-        return !(empty($active) || $active != "1");
+        return !empty($active);
     }
 
     /**
@@ -109,13 +109,11 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
      */
     private function getMainColor()
     {
-        $color = $this->_scopeConfig->getValue(
+        return $this->_scopeConfig->getValue(
             'payment/sparxpres_gateway/main_color',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
             $this->_storeManager->getStore()->getId()
         );
-
-        return empty($color) || strlen($color) != 7 ? null : $color;
     }
 
     /**
@@ -123,13 +121,11 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
      */
     private function getSliderBackgroundColor()
     {
-        $color = $this->_scopeConfig->getValue(
+        return $this->_scopeConfig->getValue(
             'payment/sparxpres_gateway/slider_bg_color',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
             $this->_storeManager->getStore()->getId()
         );
-
-        return empty($color) || strlen($color) != 7 ? null : $color;
     }
 
     /**

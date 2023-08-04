@@ -33,3 +33,9 @@
 - JS listen for selected_configurable_option change
 - Validate attribute added to slider
 - CAPTURE callback update to set status AND state to STATE_PROCESSING
+
+## [1.0.19] - 2023-08-03
+- Danish translation added
+- Title and instructions added in config
+- Enable/disabled payments added
+- Validation updated
