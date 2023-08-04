@@ -52,8 +52,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
      */
     public function isValid()
     {
-        if (!$this->isActive()
-            || $this->getCurrencyCode() != 'DKK'
+        if ($this->getCurrencyCode() != 'DKK'
             || empty($this->getLinkId())
             || empty($this->getPrice())
             || empty($this->getLoanInformation())
@@ -80,20 +79,6 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
             }
         }
         return $this->linkId;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive()
-    {
-        $active = $this->_scopeConfig->getValue(
-            'payment/sparxpres_gateway/active',
-            \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
-            $this->_storeManager->getStore()->getId()
-        );
-
-        return !empty($active);
     }
 
     /**
