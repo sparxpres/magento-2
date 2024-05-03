@@ -12,6 +12,7 @@ Følg anvisningerne på næste side.</instructions>
 				<group>offline</group>
 				<currency>DKK</currency>
 				<min_order_total>2000.0</min_order_total>
+				<order_confirmation_email>reserved</order_confirmation_email>
 				<!--can_initialize>0</can_initialize>
 				<can_use_checkout>1</can_use_checkout>
 				<can_authorize>1</can_authorize>

@@ -1,12 +1,39 @@
 <?php
 namespace Sparxpres\Websale\Model\Api;
 
+use Magento\Store\Model\ScopeInterface;
+
 class Callback implements \Sparxpres\Websale\Api\CallbackInterface
 {
+    /**
+     * @var RequestInterface
+     */
     protected $request;
+
+    /**
+     * @var ResponseInterface
+     */
     protected $response;
+
+    /**
+     * @var OrderRepositoryInterface
+     */
     protected $orderRepository;
+
+    /**
+     * @var CallbackResponseInterfaceFactory
+     */
     protected $responseFactory;
+
+    /**
+     * @var OrderSender
+     */
+    protected $orderSender;
+
+    /**
+     * @var ScopeConfigInterface
+     */
+    protected $_scopeConfig;
 
     /**
      * CustomerAddress constructor.
@@ -14,17 +41,23 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
      * @param \Magento\Framework\App\ResponseInterface $response
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
      * @param \Sparxpres\Websale\Api\Data\CallbackResponseInterfaceFactory $responseFactory
+     * @param \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\App\ResponseInterface $response,
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
-        \Sparxpres\Websale\Api\Data\CallbackResponseInterfaceFactory $responseFactory
+        \Sparxpres\Websale\Api\Data\CallbackResponseInterfaceFactory $responseFactory,
+        \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
     ) {
         $this->request = $request;
         $this->response = $response;
         $this->orderRepository = $orderRepository;
         $this->responseFactory = $responseFactory;
+        $this->orderSender     = $orderSender;
+        $this->_scopeConfig    = $scopeConfig;
     }
 
     /**
@@ -117,12 +150,18 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
                     case "RESERVED":
                         $order->setStatus(\Magento\Sales\Model\Order::STATE_PROCESSING);
                         $order->addStatusHistoryComment('Lånet er klar til frigivelse hos Sparxpres.');
+                        if ($this->getOrderEmailTriggerStatus() == 'reserved') {
+                            $this->orderSender->send($order);
+                        }
                         $order->save();
                         break;
                     case "CAPTURED":
                         $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
                         $order->setStatus(\Magento\Sales\Model\Order::STATE_PROCESSING);
                         $order->addStatusHistoryComment('Lånet er sat til udbetaling hos Sparxpres.');
+                        if ($this->getOrderEmailTriggerStatus() == 'captured') {
+                            $this->orderSender->send($order);
+                        }
                         $order->save();
                         break;
                     case "DECLINE":
@@ -142,6 +181,19 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
             $resp->setMessage($e->getMessage());
             return $resp;
         }
+    }
+    
+    /**
+     * Get Order Email Trigger Status
+     * 
+     * @return string
+     */
+    protected function getOrderEmailTriggerStatus()
+    {
+        return $this->_scopeConfig->getValue(
+            'payment/sparxpres_payment/order_confirmation_email',
+             ScopeInterface::SCOPE_STORE
+        );
     }
 
 }

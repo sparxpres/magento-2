@@ -26,3 +26,5 @@ Enabled,Enabled
 "Please enter a valid hex color code (# followed by 3 or 6 hexadecimal digits)","Please enter a valid hex color code (# followed by 3 or 6 hexadecimal digits)"
 "Title", "Title"
 "Instructions", "Instructions"
+"Choose which callback should result in the order confirmation email being sent","Choose which callback should result in the order confirmation email being sent"
+"Order confirmation email","Order confirmation email"
