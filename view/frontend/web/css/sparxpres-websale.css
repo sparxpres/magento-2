@@ -269,7 +269,7 @@ input[type=range].sparxpres-slider {
 	display:inline;
 	padding:0 !important;
 	margin:7px 0 7px 0;
-	border:none;
+	border:none !important;
 	overflow:unset;
 	-webkit-box-shadow:none;
 	-moz-box-shadow:none;
@@ -327,8 +327,8 @@ input[type=range].sparxpres-slider::-moz-focus-outer {
 }
 
 .sparxpres-slider-steps {
-	font-size: .8em;
-	color:#ccc;
+	font-size: .85em;
+	color: #9b9ca0;
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: -ms-flexbox;
