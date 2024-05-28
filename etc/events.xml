@@ -3,7 +3,7 @@
 	<event name="payment_method_is_active">
 		<observer name="Sparxpres_Websale_PaymentAvailableCheck" instance="Sparxpres\Websale\Observer\PaymentAvailableCheck" />
 	</event>
-	<!--event name="sales_order_place_after">
+	<event name="sales_order_place_after">
 		<observer name="Sparxpres_Websale_SalesOrderPlaceAfter" instance="Sparxpres\Websale\Observer\SalesOrderPlaceAfter" />
-	</event-->
+	</event>
 </config>

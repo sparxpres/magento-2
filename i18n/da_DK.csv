@@ -26,3 +26,5 @@ Enabled,Aktiv
 "Please enter a valid hex color code (# followed by 3 or 6 hexadecimal digits)","Indtast en gyldig hex-farvekode (# efterfulgt af 3 eller 6 hexadecimale cifre)"
 "Title", "Titel"
 "Instructions", "Instruktioner"
+"Choose which callback should result in the order confirmation email being sent","Vælg hvilket callback som skal resultere i at ordrebekræftelsen sendes"
+"Order confirmation email","Ordrebekræftelse email"
