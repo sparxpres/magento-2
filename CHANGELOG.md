@@ -39,3 +39,6 @@
 - Title and instructions added in config
 - Enable/disabled payments added
 - Validation updated
+
+## [1.0.20] - 2024-05-30
+- Setting for order confirmation mail added 
