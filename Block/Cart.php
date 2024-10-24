@@ -20,6 +20,14 @@ class Cart extends SparxpresTemplate
         parent::__construct($context, $registry, $data);
     }
 
+    public function isVisible()
+    {
+        if (parent::getCartPageWrapperType() != 'none') {
+            return parent::isValid();
+        }
+        return false;
+    }
+
     public function getModuleVersion()
     {
         $moduleInfo = $this->moduleList->getOne('Sparxpres_Websale');
@@ -36,6 +44,6 @@ class Cart extends SparxpresTemplate
 
     public function getContent()
     {
-        return parent::getHtmlContent(false);
+        return parent::getCardPageHtmlContent();
     }
 }

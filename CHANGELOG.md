@@ -42,3 +42,6 @@
 
 ## [1.0.20] - 2024-05-30
 - Setting for order confirmation mail added 
+
+## [1.0.21] - 2024-10-24
+- Don't call Sparxpres service when 'none' is selected as view type 

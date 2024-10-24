@@ -50,7 +50,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
     /**
      * @return bool
      */
-    public function isValid()
+    protected function isValid()
     {
         if ($this->getCurrencyCode() != 'DKK'
             || empty($this->getLinkId())
@@ -116,10 +116,23 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
     /**
      * @return string
      */
-    private function getWrapperType($isProductPage = true)
+    protected function getProductPageWrapperType()
     {
         $wType = $this->_scopeConfig->getValue(
-            'payment/sparxpres_gateway/display_wrapper_type_' . ($isProductPage ? 'product' : 'cart'),
+            'payment/sparxpres_gateway/display_wrapper_type_product',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $this->_storeManager->getStore()->getId()
+        );
+        return empty($wType) ? 'simple' : $wType;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getCartPageWrapperType()
+    {
+        $wType = $this->_scopeConfig->getValue(
+            'payment/sparxpres_gateway/display_wrapper_type_cart',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
             $this->_storeManager->getStore()->getId()
         );
@@ -214,12 +227,27 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
     /**
      * @return false|mixed|string|void|null
      */
-    public function getHtmlContent($isProductPage = true)
+    protected function getProductPageHtmlContent()
+    {
+        return $this->getHtmlContent($this->getProductPageWrapperType());
+    }
+
+    /**
+     * @return false|mixed|string|void|null
+     */
+    protected function getCardPageHtmlContent()
+    {
+        return $this->getHtmlContent($this->getCartPageWrapperType());
+    }
+
+    /**
+     * @return false|mixed|string|void|null
+     */
+    private function getHtmlContent($wrapperType)
     {
         $lId = $this->getLinkId();
         $loanPeriods = $this->getLoanPeriods();
 
-        $wrapperType = $this->getWrapperType($isProductPage);
         if ($wrapperType != 'none') {
             $viewType = $this->getViewType(count($loanPeriods));
             $html = file_get_contents(dirname(__FILE__) . '/static_html/sparxpres-' . $wrapperType . '.html');
