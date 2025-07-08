@@ -45,3 +45,6 @@
 
 ## [1.0.21] - 2024-10-24
 - Don't call Sparxpres service when 'none' is selected as view type 
+
+## [1.0.22] - 2025-07-08
+- Label added to input elements 

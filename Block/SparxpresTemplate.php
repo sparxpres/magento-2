@@ -345,7 +345,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
 
             $periodHtml = '';
             if ($viewType == 'dropdown') {
-                $periodHtml = '<select class="sparxpres-select" onchange="window.dispatchEvent('
+                $periodHtml = '<select name="sparxpres-period-select" class="sparxpres-select" aria-label="Periode" onchange="window.dispatchEvent('
                     .'new CustomEvent(\'sparxpresPeriodChange\', {detail: {period: this.value}}));">';
                 foreach ($loanPeriods as $loanPeriod) {
                     $periodHtml .= '<option value="'
@@ -368,7 +368,7 @@ abstract class SparxpresTemplate extends \Magento\Framework\View\Element\Templat
                     $style = "style=\"--sparxpres-slider-pct:" . round($pct, 2) . "%;\"";
                 }
 
-                $periodHtml = '<input type="range" class="sparxpres-slider" prefix="mdr." '
+                $periodHtml = '<input type="range" class="sparxpres-slider" prefix="mdr." aria-label="Periode" '
                     .'min="'.$minPeriod.'" '
                     .'max="'.$maxPeriod.'" '
                     .'step="'.$step.'" '
