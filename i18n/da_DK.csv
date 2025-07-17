@@ -1,6 +1,8 @@
 "Failed to initialize product","Kunne ikke initialisere produktet"
 Slider,Slider
 Dropdown,Dropdown
+Reserved,Reserveret
+Captured,Captured
 "Plain (only one period)","Simpel (kun en periode)"
 "Show the loan calculation integrated on the page","Vis låneberegneren direkte på siden"
 "Show the loan calculation in a popup window (with a button on the page)","Vis låneberegneren i et modal vindue (med knap på siden)"

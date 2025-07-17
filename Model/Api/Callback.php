@@ -131,20 +131,25 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
             } else {
                 switch ($status) {
                     case "NEW":
-                        $order->setStatus(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
+                        $order->setStatus(\Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW);
                         $order->addStatusHistoryComment('Sparxpres har modtaget låneansøgningen.');
                         $order->save();
                         break;
                     case "WAITING_FOR_SIGNATURE":
-                        $order->setStatus(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
+                        $order->setStatus(\Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW);
                         $order->addStatusHistoryComment('Sparxpres afventer kundens underskrift.');
                         $order->save();
                         break;
                     case "REGRETTED":
                     case "CANCELED":
                     case "CANCELLED":
-                        $order->setStatus(\Magento\Sales\Model\Order::STATE_CANCELED);
+                        $order->cancel();
                         $order->addStatusHistoryComment('Sparxpres har annulleret lånet.');
+                        $order->save();
+                        break;
+                    case "DECLINE":
+                        $order->cancel();
+                        $order->addStatusHistoryComment('Sparxpres har givet afslag på låneansøgningen.');
                         $order->save();
                         break;
                     case "RESERVED":
@@ -162,11 +167,6 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
                         if ($this->getOrderEmailTriggerStatus() == 'captured') {
                             $this->orderSender->send($order);
                         }
-                        $order->save();
-                        break;
-                    case "DECLINE":
-                        $order->setStatus(\Magento\Sales\Model\Order::STATE_CANCELED);
-                        $order->addStatusHistoryComment('Sparxpres har givet afslag på låneansøgningen.');
                         $order->save();
                         break;
                     default:

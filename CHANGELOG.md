@@ -44,7 +44,12 @@
 - Setting for order confirmation mail added 
 
 ## [1.0.21] - 2024-10-24
-- Don't call Sparxpres service when 'none' is selected as view type 
+- Don't call Sparxpres service when 'none' is selected as a view type 
 
 ## [1.0.22] - 2025-07-08
 - Label added to input elements 
+
+## [1.0.23] - 2025-07-15
+- Callback engine updated
+  - On new and waiting for signature, order status is now set to PAYMENT_REVIEW
+  - On regret, cancel and decline, then order is now canceled 

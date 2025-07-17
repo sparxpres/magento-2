@@ -1,6 +1,8 @@
 "Failed to initialize product","Failed to initialize product"
 Slider,Slider
 Dropdown,Dropdown
+Reserved,Reserved
+Captured,Captured
 "Plain (only one period)","Plain (only one period)"
 "Show the loan calculation integrated on the page","Show the loan calculation on the page"
 "Show the loan calculation in a popup window (with a button on the page)","Show the loan calculation in a modal window (with a button on the page)"
