@@ -21,6 +21,11 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
     protected $orderRepository;
 
     /**
+     * @var OrderFactory
+     */
+    protected $orderFactory;
+
+    /**
      * @var CallbackResponseInterfaceFactory
      */
     protected $responseFactory;
@@ -49,15 +54,17 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
         \Magento\Framework\App\ResponseInterface $response,
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
         \Sparxpres\Websale\Api\Data\CallbackResponseInterfaceFactory $responseFactory,
+        \Magento\Sales\Model\OrderFactory $orderFactory,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
     ) {
         $this->request = $request;
         $this->response = $response;
         $this->orderRepository = $orderRepository;
+        $this->orderFactory = $orderFactory;
         $this->responseFactory = $responseFactory;
-        $this->orderSender     = $orderSender;
-        $this->_scopeConfig    = $scopeConfig;
+        $this->orderSender = $orderSender;
+        $this->_scopeConfig = $scopeConfig;
     }
 
     /**
@@ -85,9 +92,14 @@ class Callback implements \Sparxpres\Websale\Api\CallbackInterface
                 throw new \InvalidArgumentException("Invalid json content");
             }
 
-            $order = $this->orderRepository->get($transactionId);
-            if (empty($order)) {
-                throw new \InvalidArgumentException('Invalid order');
+            // try to get order from increment id
+            $order = $this->orderFactory->create()->loadByIncrementId($transactionId);
+            if (empty($order) || empty($order->getId())) {
+//                // try to get order from entity id
+//                $order = $this->orderRepository->get($transactionId);
+//                if (empty($order)) {
+                    throw new \InvalidArgumentException('Invalid order');
+//                }
             }
 
             if ($status === 'NEW'

@@ -53,3 +53,6 @@
 - Callback engine updated
   - On new and waiting for signature, order status is now set to PAYMENT_REVIEW
   - On regret, cancel and decline, then order is now canceled 
+
+## [1.0.24] - 2025-07-22
+- Changed to send incrementID to Sparxpres (instead of entityID)
