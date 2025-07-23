@@ -4,7 +4,7 @@
 		<payment>
 			<sparxpres_payment>
 				<active>1</active>
-				<model>Sparxpres\Websale\Model\SparxpresPaymentMethod</model>
+				<model>Sparxpres\Websale\Model\Payment\SparxpresPaymentMethod</model>
 				<order_status>pending</order_status>
 				<title>Sparxpres delbetaling</title>
 				<instructions>Din ordre afsendes først efter godkendelse hos Sparxpres.
@@ -28,7 +28,7 @@ Følg anvisningerne på næste side.</instructions>
 			</sparxpres_payment>
 			<xprespay_payment>
 				<active>1</active>
-				<model>Sparxpres\Websale\Model\XpresPayPaymentMethod</model>
+				<model>Sparxpres\Websale\Model\Payment\XpresPayPaymentMethod</model>
 				<order_status>pending</order_status>
 				<title>XpresPay</title>
 				<instructions>Betal med din XpresPay kredit.

@@ -1,5 +1,4 @@
 <?php
-
 namespace Sparxpres\Websale\Observer;
 
 class PaymentAvailableCheck extends \Sparxpres\Websale\Block\SparxpresTemplate implements \Magento\Framework\Event\ObserverInterface
@@ -36,7 +35,7 @@ class PaymentAvailableCheck extends \Sparxpres\Websale\Block\SparxpresTemplate i
     {
         try {
             $paymentMethod = $observer->getEvent()->getMethodInstance()->getCode();
-            if ($paymentMethod == \Sparxpres\Websale\Model\SparxpresPaymentMethod::PAYMENT_METHOD_CODE) {
+            if ($paymentMethod == \Sparxpres\Websale\Model\Payment\SparxpresPaymentMethod::PAYMENT_METHOD_CODE) {
                 $this->price = $this->checkoutSession->getQuote()->getGrandTotal();
 
                 $result = $observer->getEvent()->getResult();
@@ -44,7 +43,7 @@ class PaymentAvailableCheck extends \Sparxpres\Websale\Block\SparxpresTemplate i
                     'is_available',
                     $this->is_finance_enabled()
                 );
-            } elseif ($paymentMethod == \Sparxpres\Websale\Model\XpresPayPaymentMethod::PAYMENT_METHOD_CODE) {
+            } elseif ($paymentMethod == \Sparxpres\Websale\Model\Payment\XpresPayPaymentMethod::PAYMENT_METHOD_CODE) {
                 $this->price = $this->checkoutSession->getQuote()->getGrandTotal();
 
                 $result = $observer->getEvent()->getResult();

@@ -1,9 +1,13 @@
 <?php
-namespace Sparxpres\Websale\Model;
+namespace Sparxpres\Websale\Model\Payment;
 
-class XpresPayPaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
+/**
+ * See for how Magento has made it:
+ * https://github.com/magento/magento2/blob/2.4.8/app/code/Magento/OfflinePayments/Model/Banktransfer.php
+ */
+class SparxpresPaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
 {
-    const PAYMENT_METHOD_CODE = 'xprespay_payment';
+    const PAYMENT_METHOD_CODE = 'sparxpres_payment';
     protected $_code = self::PAYMENT_METHOD_CODE;
     protected $_isOffline = true;
 

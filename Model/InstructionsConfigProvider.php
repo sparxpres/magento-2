@@ -15,8 +15,8 @@ class InstructionsConfigProvider implements ConfigProviderInterface
      * @var string[]
      */
     protected $methodCodes = [
-        SparxpresPaymentMethod::PAYMENT_METHOD_CODE,
-        XpresPayPaymentMethod::PAYMENT_METHOD_CODE
+        \Sparxpres\Websale\Model\Payment\SparxpresPaymentMethod::PAYMENT_METHOD_CODE,
+        \Sparxpres\Websale\Model\Payment\XpresPayPaymentMethod::PAYMENT_METHOD_CODE
     ];
 
     /**
